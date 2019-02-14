@@ -37,7 +37,7 @@
 	height: 31px;
 	font-size: 20px;
 	border: 2px solid SlateGray;
-	background: Gainsboro;
+	background: WhiteSmoke;
 	opacity: 0.7;
 	color: SteelBlue;
 }
@@ -53,7 +53,8 @@
 }
 
 .flatmap-toolbar i.selected {
-	background: PowderBlue;
+	background: SkyBlue;
+	border: 1.5px solid SteelBlue;
 }
 
 .flatmap-toolbar i.spacer {
