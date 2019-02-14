@@ -22,7 +22,7 @@ limitations under the License.
 
 //==============================================================================
 
-import {Fill, Style, Stroke, Text} from 'ol/style.js';
+import {Circle, Fill, Style, Stroke, Text} from 'ol/style.js';
 
 //==============================================================================
 
@@ -37,13 +37,10 @@ export function defaultStyle(feature, resolution)
         fill: new Fill({
             color: [255, 255, 255, 0]
         }),
-        stroke: new Stroke({
-            color: '#008',
-            width: strokeWidth
-        }),
+		stroke: new Stroke({color: '#008', width: strokeWidth}),
         text: new Text({
             font: `${fontSize}px "Open Sans", "Arial Unicode MS", "sans-serif"`,
-            fill: new Fill({color: '#040'}),
+            fill: new Fill({color: '#080'}),
             textAlign: feature.get('textAlign'),                 // From stylesheet specific to features??
             text: feature.get('name')
         })
@@ -56,17 +53,18 @@ export function selectedStyle(feature, resolution)
 {
     // Scale font and stroke to match resolution
 
-    const fontSize = 6*Math.sqrt(this.resolutions[0]/resolution);
+    const fontSize = 4*Math.sqrt(this.resolutions[0]/resolution);
     const strokeWidth = 0.5*this.resolutions[0]/resolution;
 
     return new Style({
         fill: new Fill({
             color: [255, 255, 255, 0.5]
         }),
-        stroke: new Stroke({
-            color: '#008',
-            width: strokeWidth
-        }),
+		image: new Circle({
+            radius: 0.6*fontSize,
+            fill: new Fill({color: '#004'}),
+          }),
+		stroke: new Stroke({color: '#008', width: strokeWidth}),
         text: new Text({
             font: `bold ${fontSize}px "Open Sans", "Arial Unicode MS", "sans-serif"`,
             fill: new Fill({color: '#080'}),
