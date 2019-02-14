@@ -22,9 +22,6 @@ limitations under the License.
 
 //==============================================================================
 
-
-//==============================================================================
-
 class Tool
 {
 	constructor(toolbar, tooltip, action) {
@@ -78,12 +75,12 @@ class StyledTool extends Tool
 export class Toolbar
 {
 	constructor(containerId) {
-		this._map = null;
+		this._editor = null;
         this._domElement = document.createElement('div');
         this._domElement.id = `${containerId}-toolbar`;
         this._domElement.classList.add('flatmap-toolbar');
         this._tools = [];
-        this.addStyledTool('fas', 'fa-mouse-pointer', 'Select');
+        this.addStyledTool('fas', 'fa-mouse-pointer', 'Select', 'select-feature');
         this.addSpacer();
         this.addStyledTool('fas', 'fa-map-marker', 'Add point');
         this.addStyledTool('fas', 'fa-pencil-alt', 'Add line');
@@ -117,19 +114,20 @@ export class Toolbar
 		this._tools.push(tool);
 	}
 
-	setMap(map)
+	setEditor(editor)
 	{
-		this._map = map;
+		this._editor = editor;
 	}
 
-	toolClicked(tool)
+	async toolClicked(tool)
 	{
 		for (let t of this._tools) {
 			t.highlight(t === tool);
 		}
-		if (tool.action) {
-			tool.action(this._map);
-			tool.highlight(false);  // Or default back to selection ??
+		if (this._editor && tool.action) {
+			if (await this._editor.action(tool.action)) {
+				tool.highlight(false);  // Or default back to selection ??
+			}
 		}
 	}
 }

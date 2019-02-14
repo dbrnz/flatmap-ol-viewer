@@ -43,7 +43,6 @@ import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 
-import {Fill, Style, Stroke, Text} from 'ol/style.js';
 import {GeoJSON, TopoJSON} from 'ol/format.js';
 import {Group} from 'ol/layer.js';
 import {OverviewMap} from 'ol/control.js';
@@ -53,8 +52,11 @@ import LayerSwitcher from 'ol-layerswitcher';
 
 //==============================================================================
 
-import * as utils from './utils.js';
+import {Editor} from './editor.js';
 import {Toolbar} from './toolbar.js';
+
+import * as styles from './styles.js';
+import * as utils from './utils.js';
 
 //==============================================================================
 
@@ -109,7 +111,7 @@ export class FlatMap extends olMap
             worldExtent: mapExtent
         });
 
-        const mapView =  new olView({
+        const mapView = new olView({
             projection: mapProjection,
             resolutions: mapResolutions,
             center: [options.size[0]/2,
@@ -145,14 +147,14 @@ export class FlatMap extends olMap
             loadTilesWhileAnimating: true
           });
 
-        if (toolbar) {
-            toolbar.setMap(this);
-        }
-
         this.id = options.id;
         this.projection = mapProjection;
         this.resolutions = mapResolutions;
         this.tileGrid = mapGrid;
+
+        if (toolbar) {
+            toolbar.setEditor(new Editor(this));
+        }
 
         // Add a debugging grid if option set and make
         // sure it's visible if we can't switch layers
@@ -166,27 +168,6 @@ export class FlatMap extends olMap
                   projection: mapProjection
                 })
             }));
-        }
-
-        // Global styling of features
-        this.styleFunction = (feature, resolution) => {
-            // Scale font and stroke to match resolution
-
-            const fontSize = 4*Math.sqrt(mapResolutions[0]/resolution);
-            const strokeWidth = 0.2*mapResolutions[0]/resolution;
-
-            return new Style({
-                stroke: new Stroke({
-                    color: '#400',
-                    width: strokeWidth
-                }),
-                text: new Text({
-                    font: `bold ${fontSize}px "Open Sans", "Arial Unicode MS", "sans-serif"`,
-                    fill: new Fill({color: '#040'}),
-                    textAlign: feature.get('textAlign'),                 // From stylesheet specific to features??
-                    text: feature.get('name')
-                })
-            });
         }
 
         // Add map's layers
@@ -263,7 +244,7 @@ WIP  */
                 }),
                 url: utils.absoluteUrl(`${this.id}/features/${source}`)
             }),
-            style: this.styleFunction
+            style: styles.defaultStyle.bind(this)
         })
     }
 
