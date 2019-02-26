@@ -256,7 +256,7 @@ export class Editor
     {
         const geoJsonFormat = new GeoJSON();
         const source = this.featureSource;
-        const json = geoJsonFormat.writeFeaturesObject(source.getFeatures(), {decimals: 5});
+        const json = geoJsonFormat.writeFeaturesObject(source.getFeatures(), {decimals: 2});
 
         return fetch(source.getUrl(), {    // Authentication <===========
             headers: { "Content-Type": "application/json; charset=utf-8" },
