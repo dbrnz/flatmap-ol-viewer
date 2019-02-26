@@ -81,18 +81,20 @@ export class Toolbar
         this._domElement.classList.add('flatmap-toolbar');
         this._tools = [];
         this.addStyledTool('fas', 'fa-mouse-pointer', 'Select', 'select-feature');
+        this._selectTool = this._tools[0];
+        this.addStyledTool('far', 'fa-hand-paper', 'Move', 'move-feature');
         this.addSpacer();
-        this.addStyledTool('fas', 'fa-map-marker', 'Add point');
-        this.addStyledTool('fas', 'fa-pencil-alt', 'Add line');
-        this.addStyledTool('fas', 'fa-vector-square', 'Add rectangle');
-        this.addStyledTool('fas', 'fa-draw-polygon', 'Add polygon');
+        this.addStyledTool('fas', 'fa-map-marker', 'Add point', 'draw-Point');
+        this.addStyledTool('fas', 'fa-pencil-alt', 'Add line', 'draw-LineString');
+        this.addStyledTool('fas', 'fa-vector-square', 'Add rectangle', 'rectangle');
+        this.addStyledTool('fas', 'fa-draw-polygon', 'Add polygon', 'draw-Polygon');
         this.addSpacer();
         this.addStyledTool('far', 'fa-trash-alt', 'Delete');
         this.addSpacer();
         this.addStyledTool('fas', 'fa-undo', 'Undo');
         this.addStyledTool('fas', 'fa-redo', 'Redo');
         this.addSpacer();
-        this.addStyledTool('fas', 'fa-save', 'Save changes');
+        this.addStyledTool('fas', 'fa-save', 'Save changes', 'save-features');
 	}
 
 	get domElement()
@@ -125,8 +127,11 @@ export class Toolbar
 			t.highlight(t === tool);
 		}
 		if (this._editor && tool.action) {
-			if (await this._editor.action(tool.action)) {
-				tool.highlight(false);  // Or default back to selection ??
+			const clearHighlight = await this._editor.action(tool.action);
+			if (clearHighlight) {
+				tool.highlight(false);
+				// Default back to selecting
+				this.toolClicked(this._selectTool);
 			}
 		}
 	}

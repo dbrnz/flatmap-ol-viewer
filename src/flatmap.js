@@ -29,6 +29,8 @@ import 'ol-contextmenu/dist/ol-contextmenu.css';
 
 //==============================================================================
 
+// Import after those required by packages so we can override styles
+
 import '/static/css/flatmap.css';
 
 //==============================================================================
@@ -123,6 +125,7 @@ export class FlatMap extends olMap
         let mapDisplayElementId = '';
         let toolbar = null;
 
+        // Create toolbar before map so that bar is in front of map's canvas
         if (options.editable) {
             mapDisplayElementId = `${htmlElementId}-display`;
 
@@ -151,9 +154,11 @@ export class FlatMap extends olMap
         this.projection = mapProjection;
         this.resolutions = mapResolutions;
         this.tileGrid = mapGrid;
+        this._featureLayers = [];
 
-        if (toolbar) {
-            toolbar.setEditor(new Editor(this));
+        if (options.editable) {
+            this._editor = new Editor(this);
+            toolbar.setEditor(this._editor);
         }
 
         // Add a debugging grid if option set and make
@@ -181,21 +186,14 @@ export class FlatMap extends olMap
         // Add a features' layer
 
         if (options.features) {
+            //this.demoTopoJSON_();   // <==================
             this.addLayer(this.newFeatureLayer('Features', ''));
-
-        this.addLayer(new VectorLayer({
-            title: "Topology",
-            source: new VectorSource({
-                format: new TopoJSON({
-                    dataProjection: this.projection
-                }),
-                url: utils.absoluteUrl(`${this.id}/topology/`)
-            }),
-            style: this.styleFunction
-        }));
-
-
+        } else {
+            this.addLayer(this.newFeatureLayer('Features'));
         }
+
+
+        this._activeFeatureLayer = this._featureLayers.length - 1;
 
         // Add a layer switcher if option set
 
@@ -219,36 +217,19 @@ export class FlatMap extends olMap
               })
             );
         }
-/*  WIP
-        if (options.editable) {
-            const draw = new Draw();
-            const select = new Select();
-            const translate = new Translate({
-                features: select.getFeatures()
-            });
-            const interactions = this.getInteractions();
-
-        this.interactions: ol.interaction.defaults().eend([select]), //, translate]),
-        }
-WIP  */
 
     }
 
-    newFeatureLayer(title, source)
+    get activeFeatureLayer()
+    //======================
     {
-        return new VectorLayer({
-            title: title,
-            source: new VectorSource({
-                format: new GeoJSON({
-                    dataProjection: this.projection
-                }),
-                url: utils.absoluteUrl(`${this.id}/features/${source}`)
-            }),
-            style: styles.defaultStyle.bind(this)
-        })
+        return (this._activeFeatureLayer >= 0)
+            ? this._featureLayers[this._activeFeatureLayer]
+            : undefined;
     }
 
     addNewLayer(options)
+    //==================
     {
         // Just have options.source and use it to get both tiles and features??
 
@@ -267,6 +248,43 @@ WIP  */
             ? this.newFeatureLayer(options.title, options.featureSource)
             : null;
 
+        if (tileLayer && featureLayer) {
+            tileLayer.set('title', 'image');
+            featureLayer.set('title', 'features');
+            this.addLayer(new Group({
+                title: options.title,
+                fold: 'close',
+                layers: [featureLayer, tileLayer]
+            }));
+        } else if (tileLayer) {
+            this.addLayer(tileLayer);
+        } else if (featureLayer) {
+            this.addLayer(featureLayer);
+        }
+    }
+
+
+    featureUrl(source)
+    //================
+    {
+        return utils.absoluteUrl(`${this.id}/features/${source}`);
+    }
+
+    newFeatureLayer(title, source=null)
+    //=================================
+    {
+        const featureLayer = new VectorLayer({
+            title: title,
+            source: new VectorSource({
+                format: new GeoJSON({dataProjection: this.projection}),
+                url: (source !== null) ? this.featureUrl(source) : undefined
+            }),
+            style: styles.defaultStyle.bind(this)
+        });
+        this._featureLayers.push(featureLayer);
+        return featureLayer;
+    }
+
 /*
         const dataProjection = this.projection;
 
@@ -282,21 +300,23 @@ fetch(`${this.id}/features/${options.featureSource}`)
 fetch(url).then()
 
 */
-
-
-        if (tileLayer && featureLayer) {
-            tileLayer.set('title', 'image');
-            featureLayer.set('title', 'features');
-            this.addLayer(new Group({
-                title: options.title,
-                fold: 'close',
-                layers: [featureLayer, tileLayer]
-            }));
-        } else if (tileLayer) {
-            this.addLayer(tileLayer);
-        } else if (featureLayer) {
-            this.addLayer(featureLayer);
-        }
+    demoTopoJSON_()
+    //=============
+    {
+         /* TopoJSON demo */
+        const featureLayer = new VectorLayer({
+            title: "Topology",
+            source: new VectorSource({
+                format: new TopoJSON({
+                    dataProjection: this.projection
+                }),
+                url: utils.absoluteUrl(`${this.id}/topology/`)
+            }),
+            style: styles.defaultStyle.bind(this)
+        });
+        this._featureLayers.push(featureLayer);
+        this.addLayer(featureLayer);
+        /* End TopoJSON demo */
     }
 }
 
