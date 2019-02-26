@@ -3,12 +3,12 @@
 // Licenced under the French Opensource BSD compatible CeCILL-B FREE SOFTWARE LICENSE
 // https://github.com/Viglino/ol-ext/blob/master/LICENSE.md
 //
-import ol_geom_Geometry from 'ol/geom/Geometry'
-import ol_geom_GeometryCollection from 'ol/geom/GeometryCollection'
-import ol_geom_MultiLineString from 'ol/geom/MultiLineString'
-import ol_geom_Polygon from 'ol/geom/Polygon'
-import ol_geom_MultiPolygon from 'ol/geom/MultiPolygon'
-import ol_geom_LineString from 'ol/geom/LineString'
+import Geometry from 'ol/geom/Geometry'
+import GeometryCollection from 'ol/geom/GeometryCollection'
+import MultiLineString from 'ol/geom/MultiLineString'
+import Polygon from 'ol/geom/Polygon'
+import MultiPolygon from 'ol/geom/MultiPolygon'
+import LineString from 'ol/geom/LineString'
 
 /** Create a cardinal spline version of this geometry.
 *	Original https://github.com/epistemex/cardinal-spline-js
@@ -22,7 +22,7 @@ import ol_geom_LineString from 'ol/geom/LineString'
 
 /** Cache cspline calculation
 */
-ol_geom_Geometry.prototype.cspline = function(options)
+Geometry.prototype.cspline = function(options)
 {	// Calculate cspline
 	if (this.calcCSpline_)
 	{	if (this.csplineGeometryRevision != this.getRevision()
@@ -39,41 +39,41 @@ ol_geom_Geometry.prototype.cspline = function(options)
 	}
 }
 
-ol_geom_GeometryCollection.prototype.calcCSpline_ = function(options)
+GeometryCollection.prototype.calcCSpline_ = function(options)
 {	var g=[], g0=this.getGeometries();
 	for (var i=0; i<g0.length; i++)
 	{	g.push(g0[i].cspline(options));
 	}
-	return new ol_geom_GeometryCollection(g);
+	return new GeometryCollection(g);
 }
 
-ol_geom_MultiLineString.prototype.calcCSpline_ = function(options)
+MultiLineString.prototype.calcCSpline_ = function(options)
 {	var g=[], lines = this.getLineStrings();
 	for (var i=0; i<lines.length; i++)
 	{	g.push(lines[i].cspline(options).getCoordinates());
 	}
-	return new ol_geom_MultiLineString(g);
+	return new MultiLineString(g);
 }
 
-ol_geom_Polygon.prototype.calcCSpline_ = function(options)
+Polygon.prototype.calcCSpline_ = function(options)
 {	var g=[], g0=this.getCoordinates();
 	for (var i=0; i<g0.length; i++)
-	{	g.push((new ol_geom_LineString(g0[i])).cspline(options).getCoordinates());
+	{	g.push((new LineString(g0[i])).cspline(options).getCoordinates());
 	}
-	return new ol_geom_Polygon(g);
+	return new Polygon(g);
 }
 
-ol_geom_MultiPolygon.prototype.calcCSpline_ = function(options)
+MultiPolygon.prototype.calcCSpline_ = function(options)
 {	var g=[], g0=this.getPolygons();
 	for (var i=0; i<g0.length; i++)
 	{	g.push(g0[i].cspline(options).getCoordinates());
 	}
-	return new ol_geom_MultiPolygon(g);
+	return new MultiPolygon(g);
 }
 
 /**
 */
-ol_geom_LineString.prototype.calcCSpline_ = function(options)
+LineString.prototype.calcCSpline_ = function(options)
  {	if (!options) options={};
 	var line = this.getCoordinates();
 	var tension = typeof options.tension === "number" ? options.tension : 0.5;
@@ -149,7 +149,7 @@ ol_geom_LineString.prototype.calcCSpline_ = function(options)
 		}
 	}
 
-	return new ol_geom_LineString(res);
+	return new LineString(res);
 }
 
 //NB: (Not confirmed)To use this module, you just have to :
