@@ -1,6 +1,7 @@
+.cache/
 */images/*.pdf
 */tiles/
-docs/
-out/
-.cache/
 dist/
+docs/
+node_modules
+out/
