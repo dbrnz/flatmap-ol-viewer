@@ -23,6 +23,7 @@ limitations under the License.
 //==============================================================================
 
 import {Circle, Fill, Style, Stroke, Text} from 'ol/style.js';
+import Point from 'ol/geom/Point';
 import MultiPoint from 'ol/geom/MultiPoint';
 
 // See http://viglino.github.io/ol-ext/examples/geom/map.geom.cspline.html
@@ -49,80 +50,108 @@ function featureText_(feature, fontSize)
     });
 }
 
-export function defaultStyle(feature, resolution)
-//===============================================
+
+function featureGeometry_(feature, interpolation=null)
+//====================================================
+{
+    interpolation = interpolation || feature.get('interpolation');
+    return (interpolation === 'cspline')
+          ? feature.getGeometry().cspline(SPLINE_OPTS)
+          : null;
+}
+
+
+function featurePoints_(feature)
+//==============================
+{
+    const geometry = feature.getGeometry();
+    const coords = (geometry.getType() === 'Polygon') ? geometry.getCoordinates()[0]
+                 : (geometry.getType() === 'Point')   ? [geometry.getCoordinates()]
+                 :                                      geometry.getCoordinates();
+    return new MultiPoint(coords);
+}
+
+
+function featurePointStyle_(feature, strokeWidth, colour)
+//=======================================================
+{
+    const radius = feature.get('name') ? strokeWidth/4 : 1.5*strokeWidth;
+    return new Circle({
+        radius: radius,
+        fill: new Fill({color: colour})
+    });
+}
+
+
+function strokeWidth_(map, resolution)
+//====================================
+{
+    return 0.5*map.resolutions[0]/resolution;
+}
+
+
+export function defaultStyle(map, feature, resolution)
+//====================================================
 {
     // Scale font and stroke to match resolution
 
-    const fontSize = 4*Math.sqrt(this.resolutions[0]/resolution);
-    const strokeWidth = 0.2*this.resolutions[0]/resolution;
-    const spline = feature.getGeometry().cspline(SPLINE_OPTS);
+    const fontSize = 4*Math.sqrt(map.resolutions[0]/resolution);
+    const strokeWidth = strokeWidth_(map, resolution);
 
     return [
         new Style({
             fill: new Fill({
                 color: [255, 255, 255, 0]
             }),
-            geometry: spline,
-            stroke: new Stroke({color: '#008', width: strokeWidth}),
+            geometry: featureGeometry_(feature),
+            image: featurePointStyle_(feature, strokeWidth, '#008'),
+            stroke: new Stroke({color: '#008', width: strokeWidth/2}),
             text: featureText_(feature, fontSize)
         })
     ];
 }
 
 
-export function drawingStyle(feature, resolution)
-//===============================================
+export function interpolatedDrawingStyle(map, interpolation, feature, resolution)
+//===============================================================================
 {
-    const g = feature.getGeometry();
-    const spline = g.cspline ? g.cspline(SPLINE_OPTS) : null;
-
+    const strokeWidth = strokeWidth_(map, resolution);
     return [
         new Style({
             stroke: new Stroke({ color:"red", width:1 }),
-            geometry: spline
+            geometry: featureGeometry_(feature, interpolation),
         }),
         new Style({
-            image: new Circle({
-                radius: 2,
-                stroke: new Stroke({color: "red", width: 4})
-            }),
-            geometry: new MultiPoint(feature.getGeometry().getCoordinates())
+            image: featurePointStyle_(feature, strokeWidth, 'red'),
+            geometry: featurePoints_(feature)
         })
     ]
 }
 
 
-export function editStyle(feature, resolution)
-//============================================
+export function editStyle(map, feature, resolution)
+//=================================================
 {
     // Scale font and stroke to match resolution
 
-    const fontSize = 4*Math.sqrt(this.resolutions[0]/resolution);
-    const strokeWidth = 0.5*this.resolutions[0]/resolution;
+    const fontSize = 4*Math.sqrt(map.resolutions[0]/resolution);
+    const strokeWidth = strokeWidth_(map, resolution);
 
-    const geometry = feature.getGeometry();
-    const spline = geometry.cspline(SPLINE_OPTS);
-    const coords = (geometry.getType() === 'Polygon') ? geometry.getCoordinates()[0]
-                                                      : geometry.getCoordinates();
     return [
         new Style({
             fill: new Fill({
                 color: [196, 196, 196, 0.5]
             }),
-            geometry: spline,
-            stroke: new Stroke({color: "red", width: strokeWidth/2}),
+            geometry: featureGeometry_(feature),
+            stroke: new Stroke({color: "red", width: 2*strokeWidth}),
             text: featureText_(feature, fontSize)
         }),
         new Style({
-            stroke: new Stroke({color: [255, 196, 196], width: strokeWidth/5})
+            stroke: new Stroke({color: [255, 196, 196], width: strokeWidth/2})
         }),
         new Style({
-            image: new Circle({
-                radius: strokeWidth/2,
-                fill: new Fill({color: "blue"})
-            }),
-            geometry: new MultiPoint(coords)
+            image: featurePointStyle_(feature, strokeWidth, 'blue'),
+            geometry: featurePoints_(feature)
         })
     ];
 }

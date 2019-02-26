@@ -279,7 +279,7 @@ export class FlatMap extends olMap
                 format: new GeoJSON({dataProjection: this.projection}),
                 url: (source !== null) ? this.featureUrl(source) : undefined
             }),
-            style: styles.defaultStyle.bind(this)
+            style: (...args) => styles.defaultStyle(this, ...args)
         });
         this._featureLayers.push(featureLayer);
         return featureLayer;
@@ -312,7 +312,7 @@ fetch(url).then()
                 }),
                 url: utils.absoluteUrl(`${this.id}/topology/`)
             }),
-            style: styles.defaultStyle.bind(this)
+            style: (...args) => styles.defaultStyle(this, ...args)
         });
         this._featureLayers.push(featureLayer);
         this.addLayer(featureLayer);

@@ -87,7 +87,7 @@ export class Editor
         if (!this._selectInteraction) {
             this._selectInteraction = new Select({
                 layers: [this.featureLayer],
-                style: styles.editStyle.bind(this._map),
+                style: (...args) => styles.editStyle(this._map, ...args),
                 });
             this._map.addInteraction(this._selectInteraction);
         }
@@ -97,7 +97,7 @@ export class Editor
     //======================
     {
         if (toolAction.startsWith('draw-')) {
-            return this.drawFeature(toolAction.substring(5));
+            return this.drawFeature(toolAction.substring(5), 'cspline');
         } else if (toolAction === 'delete-feature') {
             return this.deleteFeature();
         } else if (toolAction === 'edit-feature') {
@@ -127,13 +127,13 @@ export class Editor
 
     // Line string --> Polygon...
 
-    async drawFeature(type)
-    //=====================
+    async drawFeature(type, interpolation=null)
+    //=========================================
     {
         this.clearInteractions_(true);
 
         this._drawInteraction = new Draw({
-            style: styles.drawingStyle,
+            style: (...args) => styles.interpolatedDrawingStyle(this._map, interpolation, ...args),
             type: type
         });
         this._map.addInteraction(this._drawInteraction);
@@ -147,6 +147,9 @@ export class Editor
             this._drawInteraction.on('drawend', e => {
                 this.controlDoubleClickZoom(false);
                 this._map.removeInteraction(this._drawInteraction);
+                if (interpolation) {
+                    e.feature.set('interpolation', interpolation);
+                }
                 this.featureSource.addFeature(e.feature);
                 this._selected = e.feature;
                 setTimeout(() => this.controlDoubleClickZoom(true), 251);
