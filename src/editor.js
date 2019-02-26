@@ -36,24 +36,17 @@ import * as styles from './styles.js';
 
 //==============================================================================
 
-const MODE_INITIALISED = 0;
-const MODE_DRAWING = 1;
-const MODE_MOVING = 2;
-const MODE_SELECTING = 3;
-
-//==============================================================================
-
 export class Editor
 {
     constructor(map)
     {
         this._map = map;
+        this._dragBoxInteraction = null;
         this._drawInteraction = null;
         this._modifyInteraction = null;
         this._selectInteraction = null;
         this._translateInteraction = null;
         this._selected = null;
-        this._mode = MODE_INITIALISED;
 
         // translate
         // group/ungroup
@@ -66,6 +59,10 @@ export class Editor
     clearInteractions_(clearSelection=true)
     //=====================================
     {
+        if (this._dragBoxInteraction) {
+            this._map.removeInteraction(this._dragBoxInteraction);
+            this._dragBoxInteraction = null;
+        }
         if (this._drawInteraction) {
             this._map.removeInteraction(this._drawInteraction);
             this._drawInteraction = null;
@@ -84,11 +81,27 @@ export class Editor
         }
     }
 
+    addSelectInteraction_()
+    //=====================
+    {
+        if (!this._selectInteraction) {
+            this._selectInteraction = new Select({
+                layers: [this.featureLayer],
+                style: styles.editStyle.bind(this._map),
+                });
+            this._map.addInteraction(this._selectInteraction);
+        }
+    }
+
     async action(toolAction)
     //======================
     {
         if (toolAction.startsWith('draw-')) {
             return this.drawFeature(toolAction.substring(5));
+        } else if (toolAction === 'delete-feature') {
+            return this.deleteFeature();
+        } else if (toolAction === 'edit-feature') {
+            return this.editFeature();
         } else if (toolAction === 'move-feature') {
             return this.moveFeature();
         } else if (toolAction === 'select-feature') {
@@ -118,7 +131,6 @@ export class Editor
     //=====================
     {
         this.clearInteractions_(true);
-        this._mode = MODE_DRAWING;
 
         this._drawInteraction = new Draw({
             style: styles.drawingStyle,
@@ -157,27 +169,12 @@ export class Editor
     }
 
 
-    moveSelectCondition_(event)
-    //=========================
-    {
-        return (this._mode === MODE_MOVING && pointerMove(event))
-            || (this._mode === MODE_SELECTING && singleClick(event));
-    }
-
     async selectFeature()
     //===================
     {
         this.clearInteractions_(false);
-        this._mode = MODE_SELECTING;
 
-        if (!this._selectInteraction) {
-            this._selectInteraction = new Select({
-                layers: [this.featureLayer],
-                condition: this.moveSelectCondition_.bind(this),
-                style: styles.editStyle.bind(this._map),
-                });
-            this._map.addInteraction(this._selectInteraction);
-        }
+        this.addSelectInteraction_();
 
         const selectedFeatures = this._selectInteraction.getFeatures();
 
@@ -186,24 +183,23 @@ export class Editor
             this._selected = null;
         }
 
-        this._modifyInteraction = new Modify({features: selectedFeatures});
-        this._map.addInteraction(this._modifyInteraction);
-
         // a DragBox interaction used to select features by drawing boxes
-        const dragBox = new DragBox({condition: platformModifierKeyOnly});
+        this._dragBoxInteraction = new DragBox({condition: platformModifierKeyOnly});
+        this._map.addInteraction(this._dragBoxInteraction);
 
-        this._map.addInteraction(dragBox);
-
-        dragBox.on('boxend', () => {
+        this._dragBoxInteraction.on('boxend', () => {
             // features that intersect the box are added to the collection of
             // selected features
-            const extent = dragBox.getGeometry().getExtent();
-            this.featureSource.forEachFeatureIntersectingExtent(extent, feature =>
-                selectedFeatures.push(feature));
+            const extent = this._dragBoxInteraction.getGeometry().getExtent();
+            this.featureSource.forEachFeatureIntersectingExtent(extent,
+                feature => {
+                    selectedFeatures.push(feature);
+                    return false;
+                })
         });
 
         // clear selection when drawing a new box and when clicking on the map
-        dragBox.on('boxstart', () => selectedFeatures.clear());
+        this._dragBoxInteraction.on('boxstart', () => selectedFeatures.clear());
 
         return new Promise(resolve => resolve(false));
     }
@@ -213,22 +209,45 @@ export class Editor
     //=================
     {
         this.clearInteractions_(false);
-        this._mode = MODE_MOVING;
 
-        if (!this._selectInteraction) {
-            this._selectInteraction = new Select({
-                layers: [this.featureLayer],
-                condition: e => this.moveSelectCondition_.bind(this),
-                style: styles.editStyle.bind(this._map),
-                });
-            this._map.addInteraction(this._selectInteraction);
-        }
+        this.addSelectInteraction_();
 
         this._translateInteraction = new Translate({
             features: this._selectInteraction.getFeatures()
         });
         this._map.addInteraction(this._translateInteraction);
 
+        return new Promise(resolve => resolve(false));
+    }
+
+
+    async editFeature()
+    //=================
+    {
+        this.clearInteractions_(false);
+        this.addSelectInteraction_();
+
+        this._modifyInteraction = new Modify({
+            features: this._selectInteraction.getFeatures()
+        });
+        this._map.addInteraction(this._modifyInteraction);
+
+        return new Promise(resolve => resolve(false));
+    }
+
+    async deleteFeature()
+    //===================
+    {
+        if (this._selectInteraction) {
+            const features = this._selectInteraction.getFeatures();
+            for (let feature of features.getArray()) {
+                this.featureSource.removeFeature(feature);
+            }
+            features.clear();
+            // rerender map??
+        }
+
+        this.clearInteractions_(true);
         return new Promise(resolve => resolve(false));
     }
 
