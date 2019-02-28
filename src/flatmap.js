@@ -270,23 +270,23 @@ export class FlatMap extends olMap
     {
         // Just have options.source and use it to get both tiles and features??
 
-        const tileLayer = options.rasterSource
+        const tileLayer = options.source
             ? new TileLayer({
-                title: options.title,
+                //title: options.title,
                 source: new TileImage({
-                tileGrid: this.tileGrid,
-                tileUrlFunction: (coord, ratio, proj) =>
-                    utils.absoluteUrl(`${this.id}/tiles/${options.rasterSource}/${coord[0]}/${coord[1]}/${-coord[2] - 1}`)
+                    tileGrid: this._tileGrid,
+                    tileUrlFunction: (coord, ratio, proj) =>
+                        utils.absoluteUrl(`${this._id}/tiles/${options.source}/${coord[0]}/${coord[1]}/${-coord[2] - 1}`)
                 })
             })
             : null;
 
-        const featureLayer = options.featureSource
-            ? this.newFeatureLayer(options.title, options.featureSource)
+        const featureLayer = options.source
+            ? this.newFeatureLayer(options.title, options.source)
             : null;
 
         if (tileLayer && featureLayer) {
-            tileLayer.set('title', 'image');
+            //tileLayer.set('title', 'image');
             featureLayer.set('title', 'features');
             this.addLayer(new Group({
                 title: options.title,

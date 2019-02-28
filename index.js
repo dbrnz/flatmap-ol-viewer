@@ -39,40 +39,39 @@ const bodyMap = {
     "features": true,
     "editable": true,
     "layers": [{
-        "rasterSource": "head"
+        "source": "head"
       }, {
-        "rasterSource": "cardiovascular",
+        "source": "cardiovascular",
         "title": "Cardiovascular"
       }, {
-        "rasterSource": "brownfat",
+        "source": "brownfat",
         "title": "Brown fat"
       }, {
-        "rasterSource": "respiratory",
+        "source": "respiratory",
         "title": "Respiratory"
       }, {
-        "rasterSource": "digestive",
+        "source": "digestive",
         "title": "Digestive"
       }, {
-        "rasterSource": "exocrine",
+        "source": "exocrine",
         "title": "Exocrine"
       }, {
-        "rasterSource": "endocrine",
+        "source": "endocrine",
         "title": "Endocrine"
       }, {
-        "rasterSource": "urinary",
+        "source": "urinary",
         "title": "Urinary"
       }, {
-        "rasterSource": "reproductive",
+        "source": "reproductive",
         "title": "Reproductive"
       }, {
-        "rasterSource": "spine",
+        "source": "spine",
         "title": "Spine"
       }, {
-        "rasterSource": "ganglia",
-        "featureSource": "ganglia",
+        "source": "ganglia",
         "title": "Ganglia"
       }, {
-        "rasterSource": "neural",
+        "source": "neural",
         "title": "Neural"
       }
     ]
@@ -86,7 +85,7 @@ const functionalMap = {
     //"debug": true,
     "overviewMap": true,
     "layers": [{
-        "rasterSource": "functional"
+        "source": "functional"
       }
     ]
 };
@@ -99,7 +98,7 @@ const ratMap = {
     //"debug": true,
     "overviewMap": true,
     "layers": [{
-        "rasterSource": "body"
+        "source": "body"
       }
     ]
 };
