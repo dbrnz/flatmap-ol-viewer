@@ -105,7 +105,7 @@ export function defaultStyle(map, feature, resolution)
             }),
             geometry: featureGeometry_(feature),
             image: featurePointStyle_(feature, strokeWidth, '#008'),
-            stroke: new Stroke({color: '#008', width: strokeWidth/2}),
+            stroke: new Stroke({color: [0, 0, 0, 0.01], width: strokeWidth}),
             text: featureText_(feature, fontSize)
         })
     ];
@@ -163,14 +163,14 @@ export function editStyle(map, feature, resolution)
                 color: [196, 196, 196, 0.5]
             }),
             geometry: featureGeometry_(feature),
-            stroke: new Stroke({color: "red", width: 2*strokeWidth}),
-            text: featureText_(feature, fontSize)
+            stroke: new Stroke({color: [255, 0, 0, 0.3], width: strokeWidth/2}),
+            text: featureText_(feature, 1.2*fontSize, '#F00')
         }),
         new Style({
-            stroke: new Stroke({color: [255, 196, 196], width: strokeWidth/2})
+            stroke: new Stroke({color: [255, 196, 196, 0.2], width: strokeWidth/4})
         }),
         new Style({
-            image: featurePointStyle_(feature, strokeWidth, 'blue'),
+            image: featurePointStyle_(feature, strokeWidth/2, [0, 0, 255, 0.5]),
             geometry: featurePoints_(feature)
         })
     ];
