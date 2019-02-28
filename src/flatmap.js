@@ -64,7 +64,6 @@ import TileGrid from 'ol/tilegrid/TileGrid';
 import TileImage from 'ol/source/TileImage';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
 
 import {GeoJSON, TopoJSON} from 'ol/format.js';
 import {Group} from 'ol/layer.js';
@@ -76,6 +75,7 @@ import LayerSwitcher from 'ol-layerswitcher';
 //==============================================================================
 
 import {Editor} from './editor.js';
+import {FeatureSource} from './sources.js';
 import {PopupMenu} from './menus.js';
 import {Viewer} from './viewer.js';
 
@@ -305,44 +305,27 @@ export class FlatMap extends olMap
     {
         const featureLayer = new VectorLayer({
             title: title,
-            source: new VectorSource({
-                format: new GeoJSON({dataProjection: this.projection}),
-                url: (source !== null) ? this.featureUrl(source) : undefined
-            }),
-            style: (...args) => styles.defaultStyle(this, ...args)
+            style: (...args) => styles.defaultStyle(this, ...args),
+            source: new FeatureSource(
+                this.featureUrl(source),
+                new GeoJSON({dataProjection: this.projection})
+            )
         });
         this._featureLayers.push(featureLayer);
         return featureLayer;
     }
 
-/*
-        const dataProjection = this.projection;
-
-fetch(`${this.id}/features/${options.featureSource}`)
-    .then(response => response.json())
-    .then(json => {
-        var features = new GeoJSON().readFeatures(json);
-        vectorSource.addFeatures(features);
-    })
-    .catch(error => console.log(error));
-
-
-fetch(url).then()
-
-*/
     demoTopoJSON_()
     //=============
     {
          /* TopoJSON demo */
         const featureLayer = new VectorLayer({
             title: "Topology",
-            source: new VectorSource({
-                format: new TopoJSON({
-                    dataProjection: this.projection
-                }),
-                url: utils.absoluteUrl(`${this.id}/topology/`)
-            }),
-            style: (...args) => styles.defaultStyle(this, ...args)
+            style: (...args) => styles.defaultStyle(this, ...args),
+            source: new FeatureSource(
+                utils.absoluteUrl(`${this.id}/topology/`),
+                new TopoJSON({dataProjection: this.projection})
+            )
         });
         this._featureLayers.push(featureLayer);
         this.addLayer(featureLayer);
