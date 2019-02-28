@@ -131,9 +131,10 @@ export class Toolbar
 		if (this._editor && tool.action) {
 			const clearHighlight = await this._editor.action(tool.action);
 			if (clearHighlight) {
+			this._map.disableViewer();
 				tool.highlight(false);
-				// Default back to selecting
-				this.toolClicked(this._selectTool);
+				// Default back to viewing mode
+				this._map.enableViewer();
 			}
 		}
 	}

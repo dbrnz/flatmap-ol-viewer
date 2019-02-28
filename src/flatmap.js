@@ -18,6 +18,27 @@ limitations under the License.
 
 ******************************************************************************/
 
+/**
+ * Flatmap viewer and editor.
+ *
+ * Viewing mode:
+ *
+ *  * Features are highlighted on mouseover.
+ *  * Show a tooltip with information (description + ??)
+ *  * Notify listeners (other maps, scaffolds, etc) that feature is active
+ *  * Context menu to perform different actions (incl. viewing details?)
+ *  * Double click performs a default action
+ *
+ *
+ * Editing mode:
+ *
+ *  * Default interaction is as above
+ *  * Changes when a tool is active
+ *
+ */
+
+//==============================================================================
+
 'use strict';
 
 //==============================================================================
@@ -56,6 +77,7 @@ import LayerSwitcher from 'ol-layerswitcher';
 
 import {Editor} from './editor.js';
 import {PopupMenu} from './menus.js';
+import {Viewer} from './viewer.js';
 
 import * as styles from './styles.js';
 import * as utils from './utils.js';
@@ -219,6 +241,21 @@ export class FlatMap extends olMap
             );
         }
 
+        // By default enable pointerMove select interaction to highlight features
+        this._viewer = new Viewer(this);
+        this._viewer.enable();
+    }
+
+    enableViewer()
+    //============
+    {
+        this._viewer.enable();
+    }
+
+    disableViewer()
+    //=============
+    {
+        this._viewer.disable();
     }
 
     addNewLayer(options)

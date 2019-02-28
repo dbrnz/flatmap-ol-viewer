@@ -176,4 +176,26 @@ export function editStyle(map, feature, resolution)
     ];
 }
 
+
+export function viewStyle(map, feature, resolution)
+//=================================================
+{
+    // Scale font and stroke to match resolution
+
+    const fontSize = 4*Math.sqrt(map.resolutions[0]/resolution);
+    const strokeWidth = strokeWidth_(map, resolution);
+
+    return [
+        new Style({
+            fill: new Fill({
+                color: [255, 255, 255, 0.2]
+            }),
+            geometry: featureGeometry_(feature),
+            image: featurePointStyle_(feature, 1.2*strokeWidth, '#008'),
+            stroke: new Stroke({color: '#008', width: strokeWidth/2}),
+            text: featureText_(feature, 1.2*fontSize)
+        })
+    ];
+}
+
 //==============================================================================
