@@ -84,12 +84,12 @@ export class Toolbar
         this.addStyledTool('far', 'fa-hand-paper', 'Move', 'move-feature');
         this.addStyledTool('far', 'fa-edit', 'Edit', 'edit-feature');
         this.addStyledTool('far', 'fa-trash-alt', 'Delete', 'delete-feature');
-        this.addStyledTool('fas', 'fa-undo', 'Undo');
-        this.addStyledTool('fas', 'fa-redo', 'Redo');
+        //this.addStyledTool('fas', 'fa-undo', 'Undo');
+        //this.addStyledTool('fas', 'fa-redo', 'Redo');
         this.addSpacer();
         this.addStyledTool('fas', 'fa-map-marker', 'Add point', 'draw-Point');
         this.addStyledTool('fas', 'fa-pencil-alt', 'Add line', 'draw-LineString');
-        this.addStyledTool('fas', 'fa-vector-square', 'Add rectangle', 'rectangle');
+        //this.addStyledTool('fas', 'fa-vector-square', 'Add rectangle', 'rectangle');
         this.addStyledTool('fas', 'fa-draw-polygon', 'Add polygon', 'draw-Polygon');
         this.addSpacer();
         this.addSpacer();
