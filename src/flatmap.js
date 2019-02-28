@@ -55,6 +55,7 @@ import LayerSwitcher from 'ol-layerswitcher';
 //==============================================================================
 
 import {Editor} from './editor.js';
+import {PopupMenu} from './menus.js';
 import {Toolbar} from './toolbar.js';
 
 import * as styles from './styles.js';
