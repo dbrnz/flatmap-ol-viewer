@@ -35,21 +35,25 @@ class Tool
 	}
 
 	get action()
+	//==========
 	{
 		return this._action;
 	}
 
 	get domElement()
+	//==============
 	{
 		return this._domElement;
 	}
 
 	clicked(toolElement)
+	//==================
 	{
 		this._toolbar.toolClicked(this);
 	}
 
 	highlight(selected)
+	//=================
 	{
 		if (selected) {
 			this._domElement.classList.add('selected');
@@ -103,6 +107,7 @@ export class Toolbar
     }
 
 	addSpacer()
+	//=========
 	{
     	const element = document.createElement('i');
     	element.classList.add('spacer');
@@ -110,6 +115,7 @@ export class Toolbar
 	}
 
 	addStyledTool(style, name, tooltip, action=null)
+	//==============================================
 	{
 		const tool = new StyledTool(this, style, name, tooltip, action);
 		this._domElement.appendChild(tool.domElement);
@@ -125,6 +131,7 @@ export class Toolbar
 	}
 
 	async toolClicked(tool)
+	//=====================
 	{
 		this.setActive(tool);
 
