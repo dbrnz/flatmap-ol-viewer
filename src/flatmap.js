@@ -56,7 +56,6 @@ import LayerSwitcher from 'ol-layerswitcher';
 
 import {Editor} from './editor.js';
 import {PopupMenu} from './menus.js';
-import {Toolbar} from './toolbar.js';
 
 import * as styles from './styles.js';
 import * as utils from './utils.js';
@@ -123,29 +122,34 @@ export class FlatMap extends olMap
             maxZoom: maxZoom
           });
 
-        let mapDisplayElementId = '';
-        let toolbar = null;
+        let mapElementId = '';
 
-        // Create toolbar before map so that bar is in front of map's canvas
-        if (options.editable) {
-            mapDisplayElementId = `${htmlElementId}-display`;
+        // Create editor before map so that toolbar is in front of map's canvas
 
-            const mapElement = document.getElementById(htmlElementId);
-            mapElement.classList.add('flatmap-map');
-
-            const mapDisplayElement = document.createElement('div');
-            mapDisplayElement.id = mapDisplayElementId;
-            mapDisplayElement.classList.add('flatmap-display')
-            mapElement.appendChild(mapDisplayElement);
-
-            toolbar = new Toolbar(htmlElementId);
-            mapElement.appendChild(toolbar.domElement);
+        let editor = null;
+        if (!options.editable) {
+            mapElementId = htmlElementId;
         } else {
-            mapDisplayElementId = htmlElementId;
+            mapElementId = `${htmlElementId}-window`;
+
+            const mapContainerElement = document.getElementById(htmlElementId);
+            mapContainerElement.classList.add('flatmap-window');
+
+            const mapElement = document.createElement('div');
+            mapElement.id = mapElementId;
+            mapElement.classList.add('flatmap-map')
+            mapContainerElement.appendChild(mapElement);
+
+            const toolbarElement = document.createElement('div');
+            toolbarElement.id = `${htmlElementId}-toolbar`;
+            toolbarElement.classList.add('flatmap-toolbar');
+            mapContainerElement.appendChild(toolbarElement);
+
+            editor = new Editor(toolbarElement);
         }
 
         super({
-            target: mapDisplayElementId,
+            target: mapElementId,
             view: mapView,
             loadTilesWhileInteracting: true,
             loadTilesWhileAnimating: true
@@ -157,9 +161,8 @@ export class FlatMap extends olMap
         this.tileGrid = mapGrid;
         this._featureLayers = [];
 
-        if (options.editable) {
-            this._editor = new Editor(this);
-            toolbar.setEditor(this._editor);
+        if (editor) {
+            editor.setMap(this);
         }
 
         // Add a debugging grid if option set and make
@@ -193,9 +196,6 @@ export class FlatMap extends olMap
             this.addLayer(this.newFeatureLayer('Features'));
         }
 
-
-        this._activeFeatureLayer = this._featureLayers.length - 1;
-
         // Add a layer switcher if option set
 
         if (options.layerSwitcher) {
@@ -219,14 +219,6 @@ export class FlatMap extends olMap
             );
         }
 
-    }
-
-    get activeFeatureLayer()
-    //======================
-    {
-        return (this._activeFeatureLayer >= 0)
-            ? this._featureLayers[this._activeFeatureLayer]
-            : undefined;
     }
 
     addNewLayer(options)

@@ -29,21 +29,25 @@ import {GeoJSON, TopoJSON} from 'ol/format.js';
 
 //==============================================================================
 
+import {Toolbar} from './toolbar.js';
+
 import * as styles from './styles.js';
 
 //==============================================================================
 
 export class Editor
 {
-    constructor(map)
+    constructor(toolbarElement)
     {
-        this._map = map;
+        this._map = null;
+        this._toolbar = new Toolbar(toolbarElement, this);
         this._dragBoxInteraction = null;
         this._drawInteraction = null;
         this._modifyInteraction = null;
         this._selectInteraction = null;
         this._translateInteraction = null;
         this._selected = null;
+        this._activeLayer = null;
 
         // translate
         // group/ungroup
@@ -51,6 +55,31 @@ export class Editor
         // active layer
         // Select always active? Edit/draw mode and browse mode??
         this._history = [];
+    }
+
+    setMap(map)
+    //=========
+    {
+        this._map = map;
+        this._toolbar.setMap(map);
+
+        // Enable highlighting of vector layer names in switcher
+        this._map.set('active-layer', null);
+
+        // Detect changes to the current layer
+        this._map.on('propertychange', e => {
+            if (e.key === 'active-layer') {
+                if (e.oldValue) {
+                    e.oldValue.setStyle((...args) => styles.defaultStyle(this._map, ...args));
+                }
+                this._activeLayer = e.target.get(e.key);
+                this.clearInteractions_();
+                this._toolbar.setActive(null); // Clear toolbar
+                if (this._activeLayer) {
+                    this._activeLayer.setStyle((...args) => styles.activeLayerStyle(this._map, ...args));
+                }
+            }
+        });
     }
 
     clearInteractions_(clearSelection=true)
@@ -93,7 +122,9 @@ export class Editor
     async action(toolAction)
     //======================
     {
-        if (toolAction.startsWith('draw-')) {
+        if (!this._activeLayer) {
+            return true;
+        } else if (toolAction.startsWith('draw-')) {
             return this.drawFeature(toolAction.substring(5), 'cspline');
         } else if (toolAction === 'delete-feature') {
             return this.deleteFeature();
@@ -112,13 +143,13 @@ export class Editor
     get featureLayer()
     //================
     {
-        return this._map.activeFeatureLayer;
+        return this._activeLayer;
     }
 
     get featureSource()
     //=================
     {
-        return this._map.activeFeatureLayer.getSource();
+        return this._activeLayer.getSource();
     }
 
 

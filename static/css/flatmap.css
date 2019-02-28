@@ -18,12 +18,12 @@
     bottom: .1em
 }
 
-.flatmap-map {
+.flatmap-window {
 	display: flex;
 	flex-direction: column;
 }
 
-.flatmap-display {
+.flatmap-map {
 	flex-grow: 1;
 }
 

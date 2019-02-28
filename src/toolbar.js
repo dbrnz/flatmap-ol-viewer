@@ -74,11 +74,10 @@ class StyledTool extends Tool
 
 export class Toolbar
 {
-	constructor(containerId) {
-		this._editor = null;
-        this._domElement = document.createElement('div');
-        this._domElement.id = `${containerId}-toolbar`;
-        this._domElement.classList.add('flatmap-toolbar');
+	constructor(domElement, editor) {
+        this._domElement = domElement;
+		this._editor = editor;
+		this._map = null;
         this._tools = [];
         this.addStyledTool('fas', 'fa-mouse-pointer', 'Select', 'select-feature');
         this._selectTool = this._tools[0];
@@ -97,10 +96,11 @@ export class Toolbar
         this.addStyledTool('fas', 'fa-save', 'Save changes', 'save-features');
 	}
 
-	get domElement()
-	{
-		return this._domElement;
-	}
+    setMap(map)
+    //=========
+    {
+        this._map = map;
+    }
 
 	addSpacer()
 	{
@@ -116,16 +116,18 @@ export class Toolbar
 		this._tools.push(tool);
 	}
 
-	setEditor(editor)
-	{
-		this._editor = editor;
-	}
-
-	async toolClicked(tool)
+	setActive(tool)
+	//=============
 	{
 		for (let t of this._tools) {
 			t.highlight(t === tool);
 		}
+	}
+
+	async toolClicked(tool)
+	{
+		this.setActive(tool);
+
 		if (this._editor && tool.action) {
 			const clearHighlight = await this._editor.action(tool.action);
 			if (clearHighlight) {

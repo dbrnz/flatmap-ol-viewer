@@ -39,12 +39,12 @@ const SPLINE_OPTS = {
 
 //==============================================================================
 
-function featureText_(feature, fontSize)
-//======================================
+function featureText_(feature, fontSize, colour='#080')
+//=====================================================
 {
     return new Text({
         font: `${fontSize}px "Open Sans", "Arial Unicode MS", "sans-serif"`,
-        fill: new Fill({color: '#080'}),
+        fill: new Fill({color: colour}),
         textAlign: feature.get('textAlign'), // Feature specific??
         text: feature.get('name')
     });
@@ -111,6 +111,26 @@ export function defaultStyle(map, feature, resolution)
     ];
 }
 
+export function activeLayerStyle(map, feature, resolution)
+//========================================================
+{
+    // Scale font and stroke to match resolution
+
+    const fontSize = 4*Math.sqrt(map.resolutions[0]/resolution);
+    const strokeWidth = strokeWidth_(map, resolution);
+
+    return [
+        new Style({
+            fill: new Fill({
+                color: [224, 224, 224, 0.3]
+            }),
+            geometry: featureGeometry_(feature),
+            image: featurePointStyle_(feature, strokeWidth, '#008'),
+            stroke: new Stroke({color: '#008', width: strokeWidth/2}),
+            text: featureText_(feature, fontSize, '#800')
+        })
+    ];
+}
 
 export function interpolatedDrawingStyle(map, interpolation, feature, resolution)
 //===============================================================================
