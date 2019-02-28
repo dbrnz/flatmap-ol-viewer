@@ -181,6 +181,7 @@ export class FlatMap extends olMap
         this.projection = mapProjection;
         this.resolutions = mapResolutions;
         this.tileGrid = mapGrid;
+        this._options = options;
         this._featureLayers = [];
 
         if (editor) {
@@ -308,7 +309,8 @@ export class FlatMap extends olMap
             style: (...args) => styles.defaultStyle(this, ...args),
             source: new FeatureSource(
                 this.featureUrl(source),
-                new GeoJSON({dataProjection: this.projection})
+                new GeoJSON({dataProjection: this.projection}),
+                this._options.editable
             )
         });
         this._featureLayers.push(featureLayer);

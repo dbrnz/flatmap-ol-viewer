@@ -29,10 +29,12 @@ import VectorSource from 'ol/source/Vector';
 
 export class FeatureSource extends VectorSource
 {
-    constructor(url, format)
+    constructor(url, format, create=false)
     {
         super();
         this._url = url;
+        this._format = format;
+        this._create = create;
         this.setLoader(
             loadFeaturesXhr(url, format,
                 this.success_.bind(this),
@@ -48,7 +50,15 @@ export class FeatureSource extends VectorSource
 
     failure_()
     {
-        console.log(`Couldn't load ${this._url}`);
+        if (this._create) {
+            fetch(this._url, {    // Authentication <===========
+                headers: { "Content-Type": "application/json; charset=utf-8" },
+                method: 'PUT',
+                body: JSON.stringify(this._format.writeFeaturesObject([]))
+            });
+        } else {
+            console.log(`Couldn't load ${this._url}`);
+        }
     }
 }
 
