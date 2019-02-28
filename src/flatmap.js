@@ -68,20 +68,20 @@ export class FlatMap extends olMap
     /**
      * Create and display a new FlatMap
      *
-     * @param      {string}  htmlElementId  The HTML element identifier in which to display the map
+     * @param      {String}  htmlElementId  The HTML element identifier in which to display the map
      * @param      {Object}  options  The maps's configurable options
-     * @param      {string}  options.id  An identifier for the map
-     * @param      {Array<number>}  options.size   A two-long array giving the map's [width, height]
-     * @param      {boolean}  [options.debug=false]  Add a layer showing the grid tiles
-     * @param      {boolean}  [options.editable=false]  Allow features to be edited
-     * @param      {string}  [options.features]  The map's features are in `/{id}/features/{features}`
-     * @param      {boolean}  [options.layerSwitcher=false]  Add a control to control layer visibility
-     * @param      {boolean}  [options.overviewMap=false]  Add a control to show an overview map
+     * @param      {String}  options.id  An identifier for the map
+     * @param      {Array<number>}  options.size   A two-long array giving the map's ``width`` and ``height``
+     * @param      {Boolean}  [options.debug=false]  Add a layer showing the grid tiles
+     * @param      {Boolean}  [options.editable=false]  Allow features to be edited
+     * @param      {String}  [options.features]  The map's features are in ``/{id}/features/{features}``
+     * @param      {Boolean}  [options.layerSwitcher=false]  Add a control to control layer visibility
+     * @param      {Boolean}  [options.overviewMap=false]  Add a control to show an overview map
      * @param      {Array<Object>}  options.layers  Details of the map's layers
-     * @param      {string}  [options.layers.title]  The layer's title. A layer will only appear in the
+     * @param      {String}  [options.layers.title]  The layer's title. A layer will only appear in the
      *                                                              layer switcher if it has title
-     * @param      {string}  [options.layers.featureSource]  The layer's features are in `/{id}/features/{featureSource}`
-     * @param      {string}  [options.layers.rasterSource]  The layer's image tiles are in `/{id}/tiles/{rasterSource}/`
+     * @param      {String}  [options.layers.featureSource]  The layer's features are in ``/{id}/features/{featureSource}``
+     * @param      {String}  [options.layers.rasterSource]  The layer's image tiles are in ``/{id}/tiles/{rasterSource}/``
      */
     constructor(htmlElementId, options)
     {
