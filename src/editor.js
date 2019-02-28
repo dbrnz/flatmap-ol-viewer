@@ -23,11 +23,8 @@ limitations under the License.
 //==============================================================================
 //==============================================================================
 
-import {Circle, Fill, Stroke, Style} from 'ol/style.js';
 import {DoubleClickZoom, DragBox, Draw, platformModifierKeyOnly, Modify, Select, Snap, Translate} from 'ol/interaction.js';
-import {Feature as olFeature} from 'ol';
-import MultiPoint from 'ol/geom/MultiPoint';
-import {singleClick, pointerMove, primaryAction} from 'ol/events/condition.js';
+import {singleClick, pointerMove} from 'ol/events/condition.js';
 import {GeoJSON, TopoJSON} from 'ol/format.js';
 
 //==============================================================================
