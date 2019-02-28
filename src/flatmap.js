@@ -177,11 +177,11 @@ export class FlatMap extends olMap
             loadTilesWhileAnimating: true
           });
 
-        this.id = options.id;
-        this.projection = mapProjection;
-        this.resolutions = mapResolutions;
-        this.tileGrid = mapGrid;
         this._options = options;
+        this._id = options.id;
+        this._projection = mapProjection;
+        this._resolutions = mapResolutions;
+        this._tileGrid = mapGrid;
         this._featureLayers = [];
 
         if (editor) {
@@ -247,6 +247,12 @@ export class FlatMap extends olMap
         this._viewer.enable();
     }
 
+    get resolutions()
+    //===============
+    {
+        return this._resolutions;
+    }
+
     enableViewer()
     //============
     {
@@ -298,7 +304,7 @@ export class FlatMap extends olMap
     featureUrl(source)
     //================
     {
-        return utils.absoluteUrl(`${this.id}/features/${source}`);
+        return utils.absoluteUrl(`${this._id}/features/${source}`);
     }
 
     newFeatureLayer(title, source=null)
@@ -309,7 +315,7 @@ export class FlatMap extends olMap
             style: (...args) => styles.defaultStyle(this, ...args),
             source: new FeatureSource(
                 this.featureUrl(source),
-                new GeoJSON({dataProjection: this.projection}),
+                new GeoJSON({dataProjection: this._projection}),
                 this._options.editable
             )
         });
@@ -325,8 +331,8 @@ export class FlatMap extends olMap
             title: "Topology",
             style: (...args) => styles.defaultStyle(this, ...args),
             source: new FeatureSource(
-                utils.absoluteUrl(`${this.id}/topology/`),
-                new TopoJSON({dataProjection: this.projection})
+                utils.absoluteUrl(`${this._id}/topology/`),
+                new TopoJSON({dataProjection: this._projection})
             )
         });
         this._featureLayers.push(featureLayer);
