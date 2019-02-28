@@ -129,9 +129,9 @@ export class Toolbar
 		this.setActive(tool);
 
 		if (this._editor && tool.action) {
-			const clearHighlight = await this._editor.action(tool.action);
-			if (clearHighlight) {
 			this._map.disableViewer();
+			const finished = await this._editor.action(tool.action);
+			if (finished) {
 				tool.highlight(false);
 				// Default back to viewing mode
 				this._map.enableViewer();
