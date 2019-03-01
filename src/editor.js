@@ -77,6 +77,8 @@ export class Editor
                 this._toolbar.setActive(null); // Clear toolbar
                 if (this._activeLayer) {
                     this._activeLayer.setStyle((...args) => styles.activeLayerStyle(this._map, ...args));
+                } else {
+                    this._map.enableViewer();
                 }
             }
         });
