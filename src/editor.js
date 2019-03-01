@@ -82,6 +82,34 @@ export class Editor
         });
     }
 
+    async action(toolAction)
+    //======================
+    {
+        if (!this._activeLayer) {
+            return true;
+        } else if (toolAction.startsWith('draw-')) {
+            return this.drawFeature(toolAction.substring(5), 'cspline');
+        } else if (toolAction === 'delete-feature') {
+            this.deleteFeature();
+        } else if (toolAction === 'edit-feature') {
+            this.editFeature();
+            return false;
+        } else if (toolAction === 'move-feature') {
+            this.moveFeature();
+            return false;
+        } else if (toolAction === 'select-feature') {
+            this.selectFeature();
+            return false;
+        } else if (toolAction === 'layer-raise') {
+            this._map.raiseActiveLayer();
+        } else if (toolAction === 'layer-lower') {
+            this._map.lowerActiveLayer();
+        } else if (toolAction === 'save-features') {
+            return this.saveFeatures();
+        }
+        return true;
+    }
+
     clearInteractions_(clearSelection=true)
     //=====================================
     {
@@ -117,27 +145,6 @@ export class Editor
                 });
             this._map.addInteraction(this._selectInteraction);
         }
-    }
-
-    async action(toolAction)
-    //======================
-    {
-        if (!this._activeLayer) {
-            return true;
-        } else if (toolAction.startsWith('draw-')) {
-            return this.drawFeature(toolAction.substring(5), 'cspline');
-        } else if (toolAction === 'delete-feature') {
-            return this.deleteFeature();
-        } else if (toolAction === 'edit-feature') {
-            return this.editFeature();
-        } else if (toolAction === 'move-feature') {
-            return this.moveFeature();
-        } else if (toolAction === 'select-feature') {
-            return this.selectFeature();
-        } else if (toolAction === 'save-features') {
-            return this.saveFeatures();
-        }
-        return true;
     }
 
     get featureLayer()
@@ -232,7 +239,7 @@ export class Editor
         // clear selection when drawing a new box and when clicking on the map
         this._dragBoxInteraction.on('boxstart', () => selectedFeatures.clear());
 
-        return new Promise(resolve => resolve(false));
+        return false;
     }
 
 
@@ -248,7 +255,7 @@ export class Editor
         });
         this._map.addInteraction(this._translateInteraction);
 
-        return new Promise(resolve => resolve(false));
+        return false;
     }
 
 
@@ -263,7 +270,7 @@ export class Editor
         });
         this._map.addInteraction(this._modifyInteraction);
 
-        return new Promise(resolve => resolve(false));
+        return false;
     }
 
     async deleteFeature()
@@ -279,7 +286,6 @@ export class Editor
         }
 
         this.clearInteractions_(true);
-        return new Promise(resolve => resolve(false));
     }
 
     async saveFeatures()

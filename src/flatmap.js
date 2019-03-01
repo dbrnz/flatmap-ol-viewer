@@ -204,19 +204,12 @@ export class FlatMap extends olMap
 
         // Add map's layers
 
+        this._layerManager = new LayerManager(this, options.editable);
+
         if (options.layers) {
             for (let layer of options.layers) {
-                this.addNewLayer(layer);
+                this._layerManager.addLayer(layer);
             }
-        }
-
-        // Add a features' layer
-
-        if (options.features) {
-            //this.demoTopoJSON_();   // <==================
-            this.addLayer(this.newFeatureLayer('Features', ''));
-        } else {
-            this.addLayer(this.newFeatureLayer('Features'));
         }
 
         // Add a layer switcher if option set
@@ -247,10 +240,28 @@ export class FlatMap extends olMap
         this._viewer.enable();
     }
 
+    get id()
+    //======
+    {
+        return this._id;
+    }
+
+    get projection()
+    //==============
+    {
+        return this._projection;
+    }
+
     get resolutions()
     //===============
     {
         return this._resolutions;
+    }
+
+    get tileGrid()
+    //============
+    {
+        return this._tileGrid;
     }
 
     enableViewer()
@@ -265,68 +276,143 @@ export class FlatMap extends olMap
         this._viewer.disable();
     }
 
-    addNewLayer(options)
-    //==================
+    lowerActiveLayer()
+    //================
     {
-        // Just have options.source and use it to get both tiles and features??
-
-        const tileLayer = options.source
-            ? new TileLayer({
-                //title: options.title,
-                source: new TileImage({
-                    tileGrid: this._tileGrid,
-                    tileUrlFunction: (coord, ratio, proj) =>
-                        utils.absoluteUrl(`${this._id}/tiles/${options.source}/${coord[0]}/${coord[1]}/${-coord[2] - 1}`)
-                })
-            })
-            : null;
-
-        const featureLayer = options.source
-            ? this.newFeatureLayer(options.title, options.source)
-            : null;
-
-        if (tileLayer && featureLayer) {
-            //tileLayer.set('title', 'image');
-            featureLayer.set('title', 'features');
-            this.addLayer(new Group({
-                title: options.title,
-                fold: 'close',
-                layers: [featureLayer, tileLayer]
-            }));
-        } else if (tileLayer) {
-            this.addLayer(tileLayer);
-        } else if (featureLayer) {
-            this.addLayer(featureLayer);
+        if (this.get('active-layer')) {
+            this._layerManager.lower(this.get('active-layer'));
         }
     }
 
-
-    featureUrl(source)
+    raiseActiveLayer()
     //================
     {
-        return utils.absoluteUrl(`${this._id}/features/${source}`);
+        if (this.get('active-layer')) {
+            this._layerManager.raise(this.get('active-layer'));
+        }
+    }
+}
+
+//==============================================================================
+
+// Layer manager
+
+class LayerManager
+{
+    constructor(map)
+    {
+        this._map = map;
+        this._layers = [];
+
+        const imageTileLayers = new Group({title: 'images', fold: 'close'});
+        this._imageTileLayerCollection = imageTileLayers.getLayers();
+        this._map.addLayer(imageTileLayers);
+
+        const featureLayers = new Group({title: 'features', fold: 'close'});
+        this._featureLayerCollection = featureLayers.getLayers();
+        this._map.addLayer(featureLayers);
     }
 
-    newFeatureLayer(title, source=null)
-    //=================================
+    addLayer(layerOptions, editable)
+    //==============================
     {
+        const tileLayer = new TileLayer({
+            title: layerOptions.title,
+            source: new TileImage({
+                tileGrid: this._map.tileGrid,
+                tileUrlFunction: layerOptions.source ? ((...args) => {
+                    return LayerManager.tileUrl_(this._map.id, layerOptions.source, ...args);
+                }) : null
+            })
+        });
+        this._imageTileLayerCollection.push(tileLayer);
+
         const featureLayer = new VectorLayer({
-            title: title,
-            style: (...args) => styles.defaultStyle(this, ...args),
+            title: layerOptions.title,
+            style: (...args) => styles.defaultStyle(this._map, ...args),
             source: new FeatureSource(
-                this.featureUrl(source),
-                new GeoJSON({dataProjection: this._projection}),
-                this._options.editable
+                this.featureUrl_(layerOptions.source),
+                new GeoJSON({dataProjection: this._map.projection}),
+                editable
             )
         });
-        this._featureLayers.push(featureLayer);
-        return featureLayer;
+        this._featureLayerCollection.push(featureLayer);
+
+        this._layers.push({
+            title: layerOptions.title,
+            features: featureLayer,
+            tiles: tileLayer
+        });
     }
 
+    static tileUrl_(mapId, source, coord, ratio, proj)
+    //================================================
+    {
+        return utils.absoluteUrl(`${mapId}/tiles/${source}/${coord[0]}/${coord[1]}/${-coord[2] - 1}`)
+    }
+
+    featureUrl_(source=null)
+    //======================
+    {
+        return (source === null) ? null
+                                 : utils.absoluteUrl(`${this._map.id}/features/${source}`);
+    }
+
+    lower(layer)
+    //==========
+    {
+        const numLayers = this._featureLayerCollection.getLength();
+        for (let i = 0; i < numLayers; i++) {
+            if (this._featureLayerCollection.item(i) === layer) {
+                if (i > 0) {
+                    this._featureLayerCollection.removeAt(i);
+                    this._featureLayerCollection.insertAt(i-1, layer);
+                    const tileLayer = this._imageTileLayerCollection.removeAt(i);
+                    this._imageTileLayerCollection.insertAt(i-1, tileLayer);
+                    this._map.render();
+                }
+                break;
+            }
+        }
+    }
+
+    raise(layer)
+    //==========
+    {
+        const numLayers = this._featureLayerCollection.getLength();
+        for (let i = 0; i < numLayers; i++) {
+            if (this._featureLayerCollection.item(i) === layer) {
+                if (i < (numLayers-1)) {
+                    this._featureLayerCollection.removeAt(i);
+                    this._featureLayerCollection.insertAt(i+1, layer);
+                    const tileLayer = this._imageTileLayerCollection.removeAt(i);
+                    this._imageTileLayerCollection.insertAt(i+1, tileLayer);
+                    this._map.render();
+                }
+                break;
+            }
+        }
+    }
+}
+
+//==============================================================================
+//==============================================================================
+
+/*
+        // Add a features' layer
+
+        if (options.features) {
+            //this.demoTopoJSON_();   // <==================
+            this.addLayer(this.newFeatureLayer('Features', ''));
+        } else {
+            this.addLayer(this.newFeatureLayer('Features'));
+        }
+*/
+/*
     demoTopoJSON_()
     //=============
     {
-         /* TopoJSON demo */
+        // TopoJSON demo
         const featureLayer = new VectorLayer({
             title: "Topology",
             style: (...args) => styles.defaultStyle(this, ...args),
@@ -337,11 +423,9 @@ export class FlatMap extends olMap
         });
         this._featureLayers.push(featureLayer);
         this.addLayer(featureLayer);
-        /* End TopoJSON demo */
+        // End TopoJSON demo
     }
-}
-
-//==============================================================================
+*/
 /*
 
 Todo:

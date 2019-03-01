@@ -97,6 +97,9 @@ export class Toolbar
         this.addStyledTool('fas', 'fa-draw-polygon', 'Add polygon', 'draw-Polygon');
         this.addSpacer();
         this.addSpacer();
+        this.addStyledTool('fas', 'fa-long-arrow-alt-up', 'Raise layer', 'layer-raise');
+        this.addStyledTool('fas', 'fa-long-arrow-alt-down', 'Lower layer', 'layer-lower');
+        this.addSpacer();
         this.addStyledTool('fas', 'fa-save', 'Save changes', 'save-features');
 	}
 
