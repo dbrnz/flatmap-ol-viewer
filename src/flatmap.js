@@ -70,12 +70,11 @@ import {Group} from 'ol/layer.js';
 import {OverviewMap} from 'ol/control.js';
 import {TileDebug} from 'ol/source.js';
 
-import LayerSwitcher from 'ol-layerswitcher';
-
 //==============================================================================
 
 import {Editor} from './editor.js';
 import {FeatureSource} from './sources.js';
+import {LayerSwitcher} from './layerswitcher.js';
 import {PopupMenu} from './menus.js';
 import {Viewer} from './viewer.js';
 
@@ -246,6 +245,12 @@ export class FlatMap extends olMap
         return this._id;
     }
 
+    get layerManager()
+    //================
+    {
+        return this._layerManager;
+    }
+
     get projection()
     //==============
     {
@@ -295,6 +300,43 @@ export class FlatMap extends olMap
 
 //==============================================================================
 
+class Layer
+{
+    constructor(title, featureLayer, tileLayer)
+    {
+        this._title = title;
+        this._features = featureLayer;
+        this._tiles = tileLayer;
+        this._visible = true;
+    }
+
+    get title()
+    //===========
+    {
+        return this._title;
+    }
+
+    get visible()
+    //===========
+    {
+        return this._visible;
+    }
+
+    setVisible(visible)
+    //=================
+    {
+        if (this._features) {
+            this._features.setVisible(visible);
+        }
+        if (this._tiles) {
+            this._tiles.setVisible(visible);
+        }
+        this._visible = visible;
+    }
+}
+
+//==============================================================================
+
 // Layer manager
 
 class LayerManager
@@ -337,12 +379,13 @@ class LayerManager
             )
         });
         this._featureLayerCollection.push(featureLayer);
+        this._layers.push(new Layer(layerOptions.title, featureLayer, tileLayer));
+    }
 
-        this._layers.push({
-            title: layerOptions.title,
-            features: featureLayer,
-            tiles: tileLayer
-        });
+    get layers()
+    //==========
+    {
+        return this._layers;
     }
 
     static tileUrl_(mapId, source, coord, ratio, proj)
