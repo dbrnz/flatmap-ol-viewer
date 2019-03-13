@@ -34,8 +34,7 @@ limitations under the License.
 
 //==============================================================================
 
-import {Select} from 'ol/interaction.js';
-import {pointerMove} from 'ol/events/condition.js';
+import Overlay from 'ol/Overlay.js';
 
 //==============================================================================
 
@@ -50,6 +49,20 @@ export class Viewer
         this._map = map;
         this._highlightedFeatures = [];
         this._enabled = false;
+
+        // Display a tooltip at the mouse pointer
+
+        // Each map needs its own tooltip element
+
+        this._tooltip = document.createElement('div');
+        this._tooltip.id = 'tooltip';
+        this._tooltip.classList.add('tooltip');
+        this._tooltipOverlay = new Overlay({
+            element: this._tooltip,
+            offset: [10, 0],
+            positioning: 'bottom-left'
+        });
+        map.addOverlay(this._tooltipOverlay);
 
         // Setup pointer move callback
 
@@ -83,6 +96,19 @@ export class Viewer
     {
         const pixel = e.pixel;
         const feature = this._map.forEachFeatureAtPixel(pixel, feature => feature);
+
+        if (feature) {
+            const id = feature.getId();
+            if (id) {
+                this._tooltip.innerHTML = id;
+                this._tooltipOverlay.setPosition(e.coordinate);
+                this._tooltip.style.display = '';
+            } else {
+                this._tooltip.style.display = 'none';
+            }
+        } else {
+            this._tooltip.style.display = 'none';
+        }
 
         if (this._enabled) {
             this.clearStyle_();
