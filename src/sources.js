@@ -35,12 +35,19 @@ export class FeatureSource extends VectorSource
         this._url = url;
         this._format = format;
         this._create = create;
-        this.setLoader(
-            loadFeaturesXhr(url, format,
-                this.success_.bind(this),
-                this.failure_.bind(this)
-            )
-        );
+        if (url) {
+            this.setLoader(
+                loadFeaturesXhr(url, format,
+                    this.success_.bind(this),
+                    this.failure_.bind(this)
+                )
+            );
+        }
+    }
+
+    getUrl()
+    {
+        return this._url;
     }
 
     success_(features)
