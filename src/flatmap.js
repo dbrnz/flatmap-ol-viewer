@@ -207,7 +207,7 @@ export class FlatMap extends olMap
         // Add a layer switcher if option set
 
         if (options.layerSwitcher) {
-            const layerSwitcher = new LayerSwitcher();
+            const layerSwitcher = new LayerSwitcher({tipLabel: "Layers"});
             this.addControl(layerSwitcher);
         }
 
