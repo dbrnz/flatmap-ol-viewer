@@ -64,6 +64,15 @@
 	border-top: 5px solid SlateGray;
 	border-bottom: 4px solid SlateGray;
 }
+
+/* Tooltip */
+
+.tooltip {
+    background-color: white;
+    color: green;
+    border: 1px solid red;
+}
+
 /* Attribution */
 
 .ol-attribution ul {
