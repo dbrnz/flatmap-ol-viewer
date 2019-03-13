@@ -49,19 +49,24 @@ export class Viewer
     {
         this._map = map;
         this._highlightedFeatures = [];
+        this._enabled = false;
+
+        // Setup pointer move callback
+
+        this._map.on('pointermove', this.pointerMove_.bind(this));
     }
 
     disable()
     //=======
     {
-        this._map.un('pointermove', this.pointerMove_.bind(this));
         this.clearStyle_();
+        this._enabled = false;
     }
 
     enable()
     //======
     {
-        this._map.on('pointermove', this.pointerMove_.bind(this));
+        this._enabled = true;
     }
 
     clearStyle_()
@@ -76,11 +81,16 @@ export class Viewer
     pointerMove_(e)
     //=============
     {
-        this.clearStyle_();
-        this._map.forEachFeatureAtPixel(e.pixel, feature => {
-            feature.setStyle((...args) => styles.viewStyle(this._map, ...args));
-            this._highlightedFeatures.push(feature);
-        });
+        const pixel = e.pixel;
+        const feature = this._map.forEachFeatureAtPixel(pixel, feature => feature);
+
+        if (this._enabled) {
+            this.clearStyle_();
+            this._map.forEachFeatureAtPixel(e.pixel, feature => {
+                feature.setStyle((...args) => styles.viewStyle(this._map, ...args));
+                this._highlightedFeatures.push(feature);
+            });
+        }
     }
 }
 
