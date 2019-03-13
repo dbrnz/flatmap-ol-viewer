@@ -64,3 +64,10 @@
 	border-top: 5px solid SlateGray;
 	border-bottom: 4px solid SlateGray;
 }
+/* Attribution */
+
+.ol-attribution ul {
+    font-size: 1em;
+    font-weight: bold;
+}
+

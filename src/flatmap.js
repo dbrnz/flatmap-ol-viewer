@@ -43,6 +43,10 @@ limitations under the License.
 
 //==============================================================================
 
+const ATTRIBUTION_ABI = '© <a href="https://www.auckland.ac.nz/en/abi.html">Auckland Bioengineering Institute</a>';
+
+//==============================================================================
+
 import 'ol/ol.css';
 
 import 'ol-layerswitcher/src/ol-layerswitcher.css';
@@ -361,6 +365,7 @@ class LayerManager
         const tileLayer = new TileLayer({
             title: layerOptions.title,
             source: new TileImage({
+                attributions: ATTRIBUTION_ABI,
                 tileGrid: this._map.tileGrid,
                 tileUrlFunction: layerOptions.source ? ((...args) => {
                     return LayerManager.tileUrl_(this._map.id, layerOptions.source, ...args);
