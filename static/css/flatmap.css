@@ -49,10 +49,9 @@
 .flatmap-toolbar {
 	position: absolute;
 	top: 10px;
-	left: 50%;  /* This and the next line centre the toolbar */
-    transform: translate(-50%, 0);
-	height: 31px;
-	font-size: 20px;
+	left: 50px;
+    font-size: 20px;
+	height: 1.55em;
 	border: 2px solid SlateGray;
 	background: WhiteSmoke;
 	opacity: 0.7;
@@ -61,8 +60,8 @@
 
 .flatmap-toolbar i {
 	border: 1.5px solid Silver;
-	width: 25px;
-	height: 23px;
+	width: 1.25em;
+	height: 1.15em;
 	text-align: center;
 	padding: 3px;
 	padding-top: 5px;
