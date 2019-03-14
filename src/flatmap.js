@@ -45,13 +45,13 @@ limitations under the License.
 
 import 'ol/ol.css';
 
-import 'ol-layerswitcher/src/ol-layerswitcher.css';
 import 'ol-contextmenu/dist/ol-contextmenu.css';
 
 //==============================================================================
 
 // Import after those required by packages so we can override styles
 
+import '/static/css/ol-layerswitcher.css';
 import '/static/css/flatmap.css';
 
 //==============================================================================
