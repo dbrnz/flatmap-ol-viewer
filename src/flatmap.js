@@ -127,12 +127,15 @@ export class FlatMap extends olMap
             worldExtent: mapExtent
         });
 
+        const mapContainerElement = document.getElementById(htmlElementId);
+
         const mapView = new olView({
             projection: mapProjection,
             resolutions: mapResolutions,
             center: [options.size[0]/2,
                      options.size[1]/2],
-            zoom: 2,
+            resolution: Math.max(options.size[0]/mapContainerElement.clientWidth,
+                                 options.size[1]/mapContainerElement.clientHeight),
             maxZoom: maxZoom
           });
 
@@ -146,7 +149,6 @@ export class FlatMap extends olMap
         } else {
             mapElementId = `${htmlElementId}-window`;
 
-            const mapContainerElement = document.getElementById(htmlElementId);
             mapContainerElement.classList.add('flatmap-window');
 
             const mapElement = document.createElement('div');
