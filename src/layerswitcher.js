@@ -126,7 +126,7 @@ export class LayerSwitcher extends Control {
         var ul = document.createElement('ul');
         panel.appendChild(ul);
         // passing two map arguments instead of lyr as we're passing the map as the root of the layers tree
-        LayerSwitcher.renderLayers_(map, ul);
+        LayerSwitcher.renderLayers_(map, ul, 'layer-switcher');
     }
 
     /**
@@ -148,14 +148,14 @@ export class LayerSwitcher extends Control {
     * @param {ol.layer.Base} lyr Layer to be rendered (should have a title property).
     * @param {Number} idx Position in parent group list.
     */
-    static renderLayer_(map, lyr, idx) {
+    static renderLayer_(map, lyr, idx, lyrId) {
 
         var li = document.createElement('li');
 
         var lyrTitle = lyr.title;
-        var lyrId = LayerSwitcher.uuid();
 
         var label = document.createElement('label');
+        label.id = `${lyrId}-label`;
 
         li.className = 'layer';
         var input = document.createElement('input');
@@ -187,15 +187,15 @@ export class LayerSwitcher extends Control {
     * **Static** Render all layers that are children of a group.
     * @private
     * @param {ol.Map} map The map instance.
-    * @param {ol.layer.Group} lyr Group layer whos children will be rendered.
+    * @param {ol.layer.Group} lyr Group layer whose children will be rendered.
     * @param {Element} elm DOM element that children will be appended to.
     */
-    static renderLayers_(map, elm) {
+    static renderLayers_(map, elm, id) {
         var lyrs = map.layerManager.layers.slice().reverse();
         for (var i = 0, l; i < lyrs.length; i++) {
             l = lyrs[i];
             if (l.title) {
-                elm.appendChild(LayerSwitcher.renderLayer_(map, l, i));
+                elm.appendChild(LayerSwitcher.renderLayer_(map, l, i, `${id}-${i}`));
             }
         }
     }
@@ -213,18 +213,6 @@ export class LayerSwitcher extends Control {
             if (lyr.getLayers) {
                 LayerSwitcher.forEachRecursive(lyr, fn);
             }
-        });
-    }
-
-    /**
-    * **Static** Generate a UUID
-    * Adapted from http://stackoverflow.com/a/2117523/526860
-    * @returns {String} UUID
-    */
-    static uuid() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-            return v.toString(16);
         });
     }
 
