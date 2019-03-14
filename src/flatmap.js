@@ -59,6 +59,7 @@ import '/static/css/flatmap.css';
 import {Map as olMap} from 'ol';
 import {View as olView} from 'ol';
 
+import FullScreen from 'ol/control/FullScreen';
 import Projection from 'ol/proj/Projection';
 import TileGrid from 'ol/tilegrid/TileGrid';
 import TileLayer from 'ol/layer/Tile';
@@ -170,6 +171,8 @@ export class FlatMap extends olMap
             loadTilesWhileInteracting: true,
             loadTilesWhileAnimating: true
           });
+
+        this.addControl(new FullScreen());
 
         this._options = options;
         this._id = options.id;

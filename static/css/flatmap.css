@@ -1,7 +1,19 @@
+::backdrop
+{
+    background-color: white;
+}
+
+/* Tweak position of full-screen tool */
+
+.ol-full-screen {
+    right: 0.6em;
+}
+
 /* Tidy up layer switcher control */
 
 .layer-switcher {
-	top: 0.5em;
+	top: 2.5em;
+    right: 0em;
 }
 
 .layer-switcher li.group {
