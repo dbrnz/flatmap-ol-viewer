@@ -140,33 +140,8 @@ export class FlatMap extends olMap
             maxZoom: maxZoom
           });
 
-        let mapElementId = '';
-
-        // Create editor before map so that toolbar is in front of map's canvas
-
-        let editor = null;
-        if (!options.editable) {
-            mapElementId = htmlElementId;
-        } else {
-            mapElementId = `${htmlElementId}-window`;
-
-            mapContainerElement.classList.add('flatmap-window');
-
-            const mapElement = document.createElement('div');
-            mapElement.id = mapElementId;
-            mapElement.classList.add('flatmap-map')
-            mapContainerElement.appendChild(mapElement);
-
-            const toolbarElement = document.createElement('div');
-            toolbarElement.id = `${htmlElementId}-toolbar`;
-            toolbarElement.classList.add('flatmap-toolbar');
-            mapContainerElement.appendChild(toolbarElement);
-
-            editor = new Editor(toolbarElement);
-        }
-
         super({
-            target: mapElementId,
+            target: htmlElementId,
             view: mapView,
             loadTilesWhileInteracting: true,
             loadTilesWhileAnimating: true
@@ -181,8 +156,8 @@ export class FlatMap extends olMap
         this._tileGrid = mapGrid;
         this._featureLayers = [];
 
-        if (editor) {
-            editor.setMap(this);
+        if (options.editable) {
+            this._editor = new Editor(this);
         }
 
         // Add a debugging grid if option set and make

@@ -37,10 +37,12 @@ import * as styles from './styles.js';
 
 export class Editor
 {
-    constructor(toolbarElement)
+    constructor(map)
     {
-        this._map = null;
-        this._toolbar = new Toolbar(toolbarElement, this);
+        this._map = map;
+        this._toolbar = new Toolbar(this);
+        this._map.addControl(this._toolbar);
+
         this._dragBoxInteraction = null;
         this._drawInteraction = null;
         this._modifyInteraction = null;
@@ -55,13 +57,6 @@ export class Editor
         // active layer
         // Select always active? Edit/draw mode and browse mode??
         this._history = [];
-    }
-
-    setMap(map)
-    //=========
-    {
-        this._map = map;
-        this._toolbar.setMap(map);
 
         // Enable highlighting of vector layer names in switcher
         this._map.set('active-layer', null);
@@ -82,6 +77,12 @@ export class Editor
                 }
             }
         });
+    }
+
+    get mapId()
+    //=========
+    {
+        return this._map.id;
     }
 
     async action(toolAction)

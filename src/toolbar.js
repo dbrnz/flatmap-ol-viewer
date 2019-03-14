@@ -22,6 +22,10 @@ limitations under the License.
 
 //==============================================================================
 
+import Control from 'ol/control/Control';
+
+//==============================================================================
+
 class Tool
 {
 	constructor(toolbar, tooltip, action) {
@@ -76,12 +80,16 @@ class StyledTool extends Tool
 
 //==============================================================================
 
-export class Toolbar
+export class Toolbar extends Control
 {
-	constructor(domElement, editor) {
-        this._domElement = domElement;
-		this._editor = editor;
-		this._map = null;
+	constructor(editor) {
+        const element = document.createElement('div');
+        element.id = `${editor.mapId}-toolbar`;
+        element.classList.add('flatmap-toolbar');
+        super({element: element});
+
+        this._editor = editor;
+
         this._tools = [];
         this.addStyledTool('fas', 'fa-mouse-pointer', 'Select', 'select-feature');
         this._selectTool = this._tools[0];
@@ -103,25 +111,19 @@ export class Toolbar
         this.addStyledTool('fas', 'fa-save', 'Save changes', 'save-features');
 	}
 
-    setMap(map)
-    //=========
-    {
-        this._map = map;
-    }
-
 	addSpacer()
 	//=========
 	{
     	const element = document.createElement('i');
     	element.classList.add('spacer');
-    	this._domElement.appendChild(element);
+    	this.element.appendChild(element);
 	}
 
 	addStyledTool(style, name, tooltip, action=null)
 	//==============================================
 	{
 		const tool = new StyledTool(this, style, name, tooltip, action);
-		this._domElement.appendChild(tool.domElement);
+		this.element.appendChild(tool.domElement);
 		this._tools.push(tool);
 	}
 
