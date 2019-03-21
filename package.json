@@ -16,6 +16,7 @@
     "ol-ext": "^3.1.0",
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.8.0",
     "esdoc": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",
     "parcel-bundler": "^1.11.0",
