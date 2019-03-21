@@ -72,10 +72,10 @@ function featurePoints_(feature)
 }
 
 
-function featurePointStyle_(feature, strokeWidth, colour)
-//=======================================================
+function featurePointStyle_(strokeWidth, colour)
+//==============================================
 {
-    const radius = feature.get('name') ? strokeWidth/4 : 1.5*strokeWidth;
+    const radius = strokeWidth;
     return new Circle({
         radius: radius,
         fill: new Fill({color: colour})
@@ -104,9 +104,9 @@ export function defaultStyle(map, feature, resolution)
                 color: [255, 255, 255, 0]
             }),
             geometry: featureGeometry_(feature),
-            image: featurePointStyle_(feature, strokeWidth, '#008'),
-            stroke: new Stroke({color: [0, 0, 0, 0.01], width: strokeWidth}),
             text: featureText_(feature, fontSize)
+            image: featurePointStyle_(/* feature.get('name') ? strokeWidth/4 : */ 1.2*strokeWidth, [0, 0, 128, 0.1]),
+            stroke: new Stroke({color: [0, 0, 0, 0.01], width: strokeWidth})
         })
     ];
 }
@@ -125,7 +125,7 @@ export function activeLayerStyle(map, feature, resolution)
                 color: [224, 224, 224, 0.3]
             }),
             geometry: featureGeometry_(feature),
-            image: featurePointStyle_(feature, strokeWidth, '#008'),
+            image: featurePointStyle_(feature.get('name') ? strokeWidth/4 : 1.2*strokeWidth, '#008'),
             stroke: new Stroke({color: '#008', width: strokeWidth/2}),
             text: featureText_(feature, fontSize, '#800')
         })
@@ -138,11 +138,11 @@ export function interpolatedDrawingStyle(map, interpolation, feature, resolution
     const strokeWidth = strokeWidth_(map, resolution);
     return [
         new Style({
-            stroke: new Stroke({ color:"red", width:1 }),
+            stroke: new Stroke({ color: "red", width: 1 }),
             geometry: featureGeometry_(feature, interpolation),
         }),
         new Style({
-            image: featurePointStyle_(feature, strokeWidth, 'red'),
+            image: featurePointStyle_(1, 'red'),
             geometry: featurePoints_(feature)
         })
     ]
@@ -170,7 +170,7 @@ export function editStyle(map, feature, resolution)
             stroke: new Stroke({color: [255, 196, 196, 0.2], width: strokeWidth/4})
         }),
         new Style({
-            image: featurePointStyle_(feature, strokeWidth/2, [0, 0, 255, 0.5]),
+            image: featurePointStyle_(strokeWidth/2, [0, 0, 255, 0.5]),
             geometry: featurePoints_(feature)
         })
     ];
@@ -191,9 +191,9 @@ export function viewStyle(map, feature, resolution)
                 color: [255, 255, 255, 0.2]
             }),
             geometry: featureGeometry_(feature),
-            image: featurePointStyle_(feature, 1.2*strokeWidth, '#008'),
+            image: featurePointStyle_(1.2*strokeWidth, '#008'),
             stroke: new Stroke({color: '#008', width: strokeWidth/2}),
-            text: featureText_(feature, 1.2*fontSize)
+            text: featureText_(feature, 1.2*fontSize, '#F00')
         })
     ];
 }
