@@ -75,6 +75,8 @@ import {LayerSwitcher} from './layerswitcher.js';
 import {PopupMenu} from './menus.js';
 import {Viewer} from './viewer.js';
 
+import * as styles from './styles.js';
+
 //==============================================================================
 
 export class FlatMap extends olMap
@@ -189,6 +191,27 @@ export class FlatMap extends olMap
         if (options.layerSwitcher) {
             const layerSwitcher = new LayerSwitcher({tipLabel: "Layers"});
             this.addControl(layerSwitcher);
+
+            // Enable highlighting of vector layer names in switcher
+            this.set('active-layer', null);
+
+            // Detect changes to the current layer
+            this.on('propertychange', e => {
+                if (e.key === 'active-layer') {
+                    if (e.oldValue) {
+                        e.oldValue.setStyle((...args) => styles.defaultStyle(this, ...args));
+                    }
+                    this._activeLayer = e.target.get(e.key);
+                    if (this._editor) {
+                        this._editor.setActiveLayer(this._activeLayer);
+                    }
+                    if (this._activeLayer) {
+                        this._activeLayer.setStyle((...args) => styles.activeLayerStyle(this, ...args));
+                    } else {
+                        this.enableViewer();
+                    }
+                }
+            });
         }
 
         // Add an overview map if option set

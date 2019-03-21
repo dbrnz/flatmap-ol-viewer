@@ -40,7 +40,7 @@ export class Editor
     constructor(map)
     {
         this._map = map;
-        this._toolbar = new Toolbar(this);
+        this._toolbar = new Toolbar(map, this);
         this._map.addControl(this._toolbar);
 
         this._dragBoxInteraction = null;
@@ -57,26 +57,6 @@ export class Editor
         // active layer
         // Select always active? Edit/draw mode and browse mode??
         this._history = [];
-
-        // Enable highlighting of vector layer names in switcher
-        this._map.set('active-layer', null);
-
-        // Detect changes to the current layer
-        this._map.on('propertychange', e => {
-            if (e.key === 'active-layer') {
-                if (e.oldValue) {
-                    e.oldValue.setStyle((...args) => styles.defaultStyle(this._map, ...args));
-                }
-                this._activeLayer = e.target.get(e.key);
-                this.clearInteractions_();
-                this._toolbar.setActive(null); // Clear toolbar
-                if (this._activeLayer) {
-                    this._activeLayer.setStyle((...args) => styles.activeLayerStyle(this._map, ...args));
-                } else {
-                    this._map.enableViewer();
-                }
-            }
-        });
     }
 
     get mapId()
@@ -111,6 +91,14 @@ export class Editor
             return this.saveFeatures();
         }
         return true;
+    }
+
+    setActiveLayer(activeLayer)
+    //=========================
+    {
+        this._activeLayer = activeLayer;
+        this.clearInteractions_();
+        this._toolbar.setActive(null); // Clear active tool
     }
 
     clearInteractions_(clearSelection=true)
@@ -159,7 +147,7 @@ export class Editor
     get featureSource()
     //=================
     {
-        return this._activeLayer.getSource();
+        return this._activeLayer.getFeatureSource();
     }
 
 

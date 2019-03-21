@@ -119,3 +119,8 @@
     overflow: hidden;
     height: 0;
 }
+
+.layer-switcher li.layer .layer-switcher-active-layer {
+    background-color: #f88;
+}
+

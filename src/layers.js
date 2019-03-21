@@ -50,10 +50,17 @@ class Layer
         this._features = featureLayer;
         this._tiles = tileLayer;
         this._visible = true;
+        this._id = null;
+    }
+
+    get id()
+    //======
+    {
+        return this._id;
     }
 
     get title()
-    //===========
+    //=========
     {
         return this._title;
     }
@@ -62,6 +69,18 @@ class Layer
     //===========
     {
         return this._visible;
+    }
+
+    setId(id)
+    //=======
+    {
+        this._id = id;
+    }
+
+    setStyle(style)
+    //=============
+    {
+        this._features.setStyle(style);
     }
 
     setVisible(visible)
@@ -74,6 +93,14 @@ class Layer
             this._tiles.setVisible(visible);
         }
         this._visible = visible;
+    }
+
+    getFeatureSource()
+    //================
+    {
+        if (this._features) {
+            return this._features.getSource();
+        }
     }
 }
 

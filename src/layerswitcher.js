@@ -51,10 +51,11 @@ export class LayerSwitcher extends Control {
             this_.showPanel();
         };
 
-        button.onclick = function(e) {
+        this_.panel.onclick = function(e) {
             e = e || window.event;
-            this_.showPanel();
-            e.preventDefault();
+            if (e.toElement === this_.panel || e.toElement === this_.panel.children[0]) {
+                LayerSwitcher.removeActiveHighlight_(this_.getMap());
+            }
         };
 
         this_.panel.onmouseout = function(e) {
@@ -101,7 +102,8 @@ export class LayerSwitcher extends Control {
     * Hide the layer panel.
     */
     hidePanel() {
-        if (this.element.classList.contains(this.shownClassName)) {
+        if (!this.getMap().get('active-layer')
+          && this.element.classList.contains(this.shownClassName)) {
             this.element.classList.remove(this.shownClassName);
         }
     }
@@ -126,7 +128,7 @@ export class LayerSwitcher extends Control {
         var ul = document.createElement('ul');
         panel.appendChild(ul);
         // passing two map arguments instead of lyr as we're passing the map as the root of the layers tree
-        LayerSwitcher.renderLayers_(map, ul, 'layer-switcher');
+        LayerSwitcher.renderLayers_(map, ul, `layer-switcher-${map.id}`);
     }
 
     /**
@@ -153,6 +155,7 @@ export class LayerSwitcher extends Control {
         var li = document.createElement('li');
 
         var lyrTitle = lyr.title;
+        lyr.setId(lyrId);
 
         var label = document.createElement('label');
         label.id = `${lyrId}-label`;
@@ -164,6 +167,10 @@ export class LayerSwitcher extends Control {
         input.checked = lyr.visible;
         input.onchange = function(e) {
             LayerSwitcher.setVisible_(map, lyr, e.target.checked);
+            // If not checked and active layer then turn off highlight on label
+            if (!e.target.checked && map.get('active-layer') === lyr) {
+                LayerSwitcher.removeActiveHighlight_(map);
+            }
         };
         li.appendChild(input);
 
@@ -179,8 +186,19 @@ export class LayerSwitcher extends Control {
 
         li.appendChild(label);
 
-        return li;
+        const activeLayer = map.get('active-layer');
+        if (activeLayer !== undefined) {
+            if (activeLayer === lyr) {
+                label.classList.add(CSS_PREFIX + 'active-layer');
+            }
+            label.onclick = function (e) {
+                if (LayerSwitcher.toggleActive_(map, lyr, label)) {
+                    e.preventDefault();
+                }
+            }
+        };
 
+        return li;
     }
 
     /**
@@ -245,6 +263,51 @@ export class LayerSwitcher extends Control {
         } catch(e) {
             return false;
         }
+    }
+
+    /**
+     * Removes the active highlight.
+     * @private
+     * @param      {ol.Map} map The map instance.
+     * @return     {Element}  DOM element for the label that was highlighted.
+     */
+    static removeActiveHighlight_(map) {
+        const prevActiveLayer = map.get('active-layer');
+        let prevActiveLabel = null;
+        if (prevActiveLayer) {
+            prevActiveLabel = document.getElementById(`${prevActiveLayer.id}-label`);
+            if (prevActiveLabel) {
+                prevActiveLabel.classList.remove(CSS_PREFIX + 'active-layer');
+                map.set('active-layer', null);
+            }
+        }
+        return prevActiveLabel;
+    }
+
+    /**
+     * Highlight/unhighlight the layer's label.
+     * @private
+     * @param      {ol.Map} map The map instance.
+     * @param      {ol.layer.Base} lyr The layer.
+     * @param      {Element}  DOM element of the layer's label.
+     * @return     {boolean} True if the layer's checkbox is checked.
+     */
+    static toggleActive_(map, lyr, label) {
+
+        // Remove any existing highlight
+        const prevActiveLabel = LayerSwitcher.removeActiveHighlight_(map);
+
+        const lyrId = lyr.id;
+        const checkbox = document.getElementById(lyrId);
+
+        // Highlight clicked label if it is different to what was highlighted
+        if (label !== prevActiveLabel) {
+            label.classList.add(CSS_PREFIX + 'active-layer');
+            map.set('active-layer', lyr);
+            return checkbox.checked;
+        }
+
+        return false;
     }
 
 }

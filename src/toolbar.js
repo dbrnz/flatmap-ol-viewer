@@ -88,12 +88,13 @@ class StyledTool extends Tool
 
 export class Toolbar extends Control
 {
-	constructor(editor) {
+	constructor(map, editor) {
         const element = document.createElement('div');
         element.id = `${editor.mapId}-toolbar`;
         element.classList.add('flatmap-toolbar');
         super({element: element});
 
+        this._map = map;
         this._editor = editor;
 
         this._tools = [];
