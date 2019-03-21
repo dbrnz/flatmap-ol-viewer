@@ -1,0 +1,38 @@
+{
+    "id": "saucerman",
+    "size": [16000, 10000],
+    "overviewMap": true,
+    "layerSwitcher": true,
+    "layers": [
+        {
+            "source": "background"
+        }, {
+            "source": "potassium",
+            "title": "Potassium"
+        }, {
+            "source": "calcium",
+            "title": "Calcium"
+        }, {
+            "source": "sodium",
+            "title": "Sodium"
+        }, {
+            "source": "hydrogen",
+            "title": "Hydrogen"
+        }, {
+            "source": "mitochrondial-complex",
+            "title": "Mitochrondial"
+        }, {
+            "source": "chloride",
+            "title": "Chloride"
+        }, {
+            "source": "bicarbonate",
+            "title": "Bicarbonate"
+        }, {
+            "source": "hydroxide",
+            "title": "Hydroxide"
+        }, {
+            "source": "metabolic",
+            "title": "Metabolic"
+        }
+    ]
+}

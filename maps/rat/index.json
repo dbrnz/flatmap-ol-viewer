@@ -1,0 +1,9 @@
+{
+    "id": "rat",
+    "size": [10000, 5959],
+    "overviewMap": true,
+    "layers": [{
+        "source": "body"
+      }
+    ]
+}

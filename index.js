@@ -26,93 +26,48 @@ limitations under the License.
 
 //==============================================================================
 
-import {FlatMap} from '/src/flatmap.js';
+import {FlatMap} from './src/flatmap.js';
+import * as utils from './src/utils.js';
 
 //==============================================================================
 
-const bodyMap = {
-    "id": "body",
-    "size": [10000, 18000],
-    "debug": true,
-    "layerSwitcher": true,
-    "overviewMap": true,
-    "features": true,
+const blankMap = {
+    "id": "blank",
+    "size": [10000, 10000],
     "editable": true,
-    "layers": [{
-        "source": "head"
-      }, {
-        "source": "cardiovascular",
-        "title": "Cardiovascular"
-      }, {
-        "source": "brownfat",
-        "title": "Brown fat"
-      }, {
-        "source": "respiratory",
-        "title": "Respiratory"
-      }, {
-        "source": "digestive",
-        "title": "Digestive"
-      }, {
-        "source": "exocrine",
-        "title": "Exocrine"
-      }, {
-        "source": "endocrine",
-        "title": "Endocrine"
-      }, {
-        "source": "urinary",
-        "title": "Urinary"
-      }, {
-        "source": "reproductive",
-        "title": "Reproductive"
-      }, {
-        "source": "spine",
-        "title": "Spine"
-      }, {
-        "source": "ganglia",
-        "title": "Ganglia"
-      }, {
-        "source": "neural",
-        "title": "Neural"
-      }
-    ]
+    "layerSwitcher": true
 };
 
-/* Functional diagram */
+//==============================================================================
 
-const functionalMap = {
-    "id": "functional",
-    "size": [20000, 12000],
-    //"debug": true,
-    "overviewMap": true,
-    "layers": [{
-        "source": "functional"
-      }
-    ]
-};
-
-/* Rat body */
-
-const ratMap = {
-    "id": "rat",
-    "size": [10000, 5959],
-    //"debug": true,
-    "overviewMap": true,
-    "layers": [{
-        "source": "body"
-      }
-    ]
-};
+function loadMap(mapId, htmlElementId)
+{
+    fetch(utils.absoluteUrl(`${mapId}/`), {
+        headers: { "Accept": "application/json; charset=utf-8" },
+        method: 'GET'
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error(`Couldn't fetch '${mapId}' map`);
+    })
+    .then(json => {
+        return new FlatMap(htmlElementId, json);
+    });
+}
 
 //==============================================================================
 
 function init()
 {
-    const map = new FlatMap('map1', bodyMap);
+//    const map = new FlatMap('map1', blankMap);
 
-    const map2 = new FlatMap('map2', functionalMap);
+    loadMap('body', 'map1');
 
-    const map3 = new FlatMap('map3', ratMap);
+    loadMap('functional', 'map2');
 
+    loadMap('saucerman', 'map3');
 }
 
 //==============================================================================

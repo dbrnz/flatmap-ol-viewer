@@ -1,6 +1,6 @@
 .cache/
-*/images/*.pdf
-*/tiles/
+maps/*/images/*.pdf
+maps/*/tiles/
 dist/
 docs/
 node_modules
