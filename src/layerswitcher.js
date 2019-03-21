@@ -84,7 +84,6 @@ export class LayerSwitcher extends Control {
             this.mapListeners.push(map.on('pointerdown', function() {
                 this_.hidePanel();
             }));
-            this.renderPanel();
         }
     }
 

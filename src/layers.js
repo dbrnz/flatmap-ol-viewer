@@ -36,6 +36,7 @@ import {GeoJSON, TopoJSON} from 'ol/format.js';
 //==============================================================================
 
 import {FeatureSource} from './sources.js';
+import {LayerSwitcher} from './layerswitcher.js';
 
 import * as styles from './styles.js';
 import * as utils from './utils.js';
@@ -108,7 +109,7 @@ class Layer
 
 export class LayerManager
 {
-    constructor(map)
+    constructor(map, switcher=false)
     {
         this._map = map;
         this._layers = [];
@@ -120,6 +121,13 @@ export class LayerManager
         const featureLayers = new Group();
         this._featureLayerCollection = featureLayers.getLayers();
         this._map.addLayer(featureLayers);
+
+        // Add a layer switcher if option set
+
+        if (switcher) {
+            this._layerSwitcher = new LayerSwitcher({tipLabel: "Layers"});
+            map.addControl(this._layerSwitcher);
+        }
     }
 
     addLayer(layerOptions, editable)
@@ -173,18 +181,17 @@ export class LayerManager
     lower(layer)
     //==========
     {
-        const numLayers = this._featureLayerCollection.getLength();
-        for (let i = 0; i < numLayers; i++) {
-            if (this._featureLayerCollection.item(i) === layer) {
-                if (i > 0) {
-                    this._featureLayerCollection.removeAt(i);
-                    this._featureLayerCollection.insertAt(i-1, layer);
-                    const tileLayer = this._imageTileLayerCollection.removeAt(i);
-                    this._imageTileLayerCollection.insertAt(i-1, tileLayer);
-                    this._map.render();
-                }
-                break;
-            }
+        const i = this._layers.findIndex(l => (l === layer));
+        if (i > 0) {
+            this._layers[i] = this._layers[i-1];
+            this._layers[i-1] = layer;
+            const featureLayer = this._featureLayerCollection.removeAt(i);
+            this._featureLayerCollection.insertAt(i-1, featureLayer);
+            const tileLayer = this._imageTileLayerCollection.removeAt(i);
+            this._imageTileLayerCollection.insertAt(i-1, tileLayer);
+            // Redraw map and switcher panel
+            this._map.render();
+            this._layerSwitcher.renderPanel();
         }
     }
 
@@ -192,17 +199,17 @@ export class LayerManager
     //==========
     {
         const numLayers = this._featureLayerCollection.getLength();
-        for (let i = 0; i < numLayers; i++) {
-            if (this._featureLayerCollection.item(i) === layer) {
-                if (i < (numLayers-1)) {
-                    this._featureLayerCollection.removeAt(i);
-                    this._featureLayerCollection.insertAt(i+1, layer);
-                    const tileLayer = this._imageTileLayerCollection.removeAt(i);
-                    this._imageTileLayerCollection.insertAt(i+1, tileLayer);
-                    this._map.render();
-                }
-                break;
-            }
+        const i = this._layers.findIndex(l => (l === layer));
+        if (i >= 0 && i < (numLayers-1)) {
+            this._layers[i] = this._layers[i+1];
+            this._layers[i+1] = layer;
+            const featureLayer = this._featureLayerCollection.removeAt(i);
+            this._featureLayerCollection.insertAt(i+1, featureLayer);
+            const tileLayer = this._imageTileLayerCollection.removeAt(i);
+            this._imageTileLayerCollection.insertAt(i+1, tileLayer);
+            // Redraw map and switcher panel
+            this._map.render();
+            this._layerSwitcher.renderPanel();
         }
     }
 }
