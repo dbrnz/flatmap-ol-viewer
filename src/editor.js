@@ -99,6 +99,11 @@ export class Editor
         this._activeLayer = activeLayer;
         this.clearInteractions_();
         this._toolbar.setActive(null); // Clear active tool
+        if (activeLayer) {
+            this._toolbar.show();
+        } else {
+            this._toolbar.hide();
+        }
     }
 
     clearInteractions_(clearSelection=true)

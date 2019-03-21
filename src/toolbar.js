@@ -92,10 +92,12 @@ export class Toolbar extends Control
         const element = document.createElement('div');
         element.id = `${editor.mapId}-toolbar`;
         element.classList.add('flatmap-toolbar');
+        element.style.visibility = 'hidden';
         super({element: element});
 
         this._map = map;
         this._editor = editor;
+        this._domElement = element;
 
         this._tools = [];
         this.addStyledTool('fas', 'fa-mouse-pointer', 'Select', 'select-feature');
@@ -140,6 +142,18 @@ export class Toolbar extends Control
 		for (let t of this._tools) {
 			t.highlight(t === tool);
 		}
+	}
+
+	hide()
+	//====
+	{
+        this._domElement.style.visibility = 'hidden';
+	}
+
+	show()
+	//====
+	{
+        this._domElement.style.visibility = '';
 	}
 
 	async toolClicked(tool)
