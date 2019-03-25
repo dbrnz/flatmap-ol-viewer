@@ -156,6 +156,16 @@ export class LayerManager
                 new GeoJSON({dataProjection: this._map.projection})            )
         });
         this._featureLayerCollection.push(featureLayer);
+
+        if (layerOptions.zoom) {
+            const maxResolution = this._map.resolutions[layerOptions.zoom[0]];
+            tileLayer.setMaxResolution(maxResolution);
+            featureLayer.setMaxResolution(maxResolution);
+            const minResolution = this._map.resolutions[layerOptions.zoom[1]];
+            tileLayer.setMinResolution(minResolution);
+            featureLayer.setMinResolution(minResolution);
+        }
+
         this._layers.push(new Layer(layerOptions.title, featureLayer, tileLayer));
     }
 

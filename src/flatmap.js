@@ -97,6 +97,8 @@ export class FlatMap extends olMap
      *                                                              layer switcher if it has title
      * @param      {String}  [options.layers.featureSource]  The layer's features are in ``/{id}/features/{featureSource}``
      * @param      {String}  [options.layers.rasterSource]  The layer's image tiles are in ``/{id}/tiles/{rasterSource}/``
+     * @param      {Array<number>}  [options.layers.zoom] Optional [min, max] zoom levels for displaying
+     *                                                    the layer
      */
     constructor(htmlElementId, options)
     {
