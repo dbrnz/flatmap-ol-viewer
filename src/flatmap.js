@@ -71,6 +71,7 @@ import {TileDebug} from 'ol/source.js';
 
 import {Editor} from './editor.js';
 import {LayerManager} from './layers.js';
+import {MessageManager} from './messages.js';
 import {PopupMenu} from './menus.js';
 import {Viewer} from './viewer.js';
 
@@ -226,6 +227,8 @@ export class FlatMap extends olMap
         // By default enable pointerMove select interaction to highlight features
         this._viewer = new Viewer(this);
         this._viewer.enable();
+
+        this._messageHandler = MessageManager.connect(this._id, json => this._viewer.process(json));
     }
 
     get id()
@@ -238,6 +241,12 @@ export class FlatMap extends olMap
     //================
     {
         return this._layerManager;
+    }
+
+    get messageHandler()
+    //==================
+    {
+        return this._messageHandler;
     }
 
     get projection()

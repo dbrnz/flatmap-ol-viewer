@@ -48,6 +48,7 @@ export class Viewer
     {
         this._map = map;
         this._highlightedFeatures = [];
+        this._selectedFeature = null;
         this._enabled = false;
 
         // Display a tooltip at the mouse pointer
@@ -64,14 +65,16 @@ export class Viewer
         });
         map.addOverlay(this._tooltipOverlay);
 
-        // Setup pointer move callback
+        // Setup callbacks
 
         this._map.on('pointermove', this.pointerMove_.bind(this));
+        this._map.on('singleclick', this.singleClick_.bind(this));
     }
 
     disable()
     //=======
     {
+        this._selectedFeature = null;
         this.clearStyle_();
         this._enabled = false;
     }
@@ -86,9 +89,24 @@ export class Viewer
     //===========
     {
         for (let feature of this._highlightedFeatures) {
-            feature.setStyle(null);
+            if (feature !== this._selectedFeature) {
+                feature.setStyle(null);
+            }
         }
         this._highlightedFeatures = [];
+    }
+
+    process(remote)
+    //=============
+    {
+        console.log(this._map.id, 'received', remote);
+        if (remote.action === 'select') {
+            // remote.type has class of resource
+            // features = this._map.getFeaturesByType(remote.type);
+            // highlight features (==> unhighlight others)
+            // What about zooming to 1.4*features.extent() (20% margin all around)??
+            // Activate (and raise to top??) feature.layer() ??
+        }
     }
 
     pointerMove_(e)
@@ -111,13 +129,38 @@ export class Viewer
         }
 
         if (this._enabled) {
-            this.clearStyle_();
+            this.clearStyle_(); // But not selected feature...
             this._map.forEachFeatureAtPixel(e.pixel, feature => {
                 feature.setStyle((...args) => styles.viewStyle(this._map, ...args));
                 this._highlightedFeatures.push(feature);
             });
         }
     }
+
+    singleClick_(e)
+    //=============
+    {
+        const pixel = e.pixel;
+        const feature = this._map.forEachFeatureAtPixel(pixel, feature => feature);
+
+        if (feature) {
+            if (this._selectedFeature) {
+                this._selectedFeature.setStyle(null);
+            }
+            this._selectedFeature = feature;
+            const id = feature.getId();
+            if (id) {
+                this._map.messageHandler.send(feature, 'select')
+            }
+            // highlight feature (==> unhighlight others)
+        } else {
+            if (this._selectedFeature) {
+                this._selectedFeature.setStyle(null);
+            }
+            this._selectedFeature = null;
+        }
+    }
+
 }
 
 //==============================================================================
