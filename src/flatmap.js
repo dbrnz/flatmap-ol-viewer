@@ -89,14 +89,13 @@ export class FlatMap extends olMap
      * @param      {Array<number>}  options.size   A two-long array giving the map's ``width`` and ``height``
      * @param      {Boolean}  [options.debug=false]  Add a layer showing the grid tiles
      * @param      {Boolean}  [options.editable=false]  Allow features to be edited
-     * @param      {String}  [options.features]  The map's features are in ``/{id}/features/{features}``
      * @param      {Boolean}  [options.layerSwitcher=false]  Add a control to control layer visibility
      * @param      {Boolean}  [options.overviewMap=false]  Add a control to show an overview map
      * @param      {Array<Object>}  options.layers  Details of the map's layers
+     * @param      {String}  [options.layers.source]  The layer's features are in ``/{id}/features/{source}``
+     *                                                and the layer's image tiles in ``/{id}/tiles/{source}/``
      * @param      {String}  [options.layers.title]  The layer's title. A layer will only appear in the
-     *                                                              layer switcher if it has title
-     * @param      {String}  [options.layers.featureSource]  The layer's features are in ``/{id}/features/{featureSource}``
-     * @param      {String}  [options.layers.rasterSource]  The layer's image tiles are in ``/{id}/tiles/{rasterSource}/``
+     *                                               layer switcher if it has title
      * @param      {Array<number>}  [options.layers.zoom] Optional [min, max] zoom levels for displaying
      *                                                    the layer
      */
