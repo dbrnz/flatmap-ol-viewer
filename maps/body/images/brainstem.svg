@@ -390,13 +390,13 @@
            clip-path="url(#clipPath858)"
            id="g854"><path
              id="path860"
-             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             style="fill:#000000;fill-opacity:0;fill-rule:nonzero;stroke:none"
              d="M 0,540 H 959.76 V 0 H 0 Z" /></g></g></g><g
        id="g862"><g
          clip-path="url(#clipPath868)"
          id="g864"><path
            id="path870"
-           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           style="fill:#000000;fill-opacity:0;fill-rule:nonzero;stroke:none"
            d="M 0,540 H 960 V 0 H 0 Z" /><path
            id="path872"
            style="fill:#fff6f5;fill-opacity:1;fill-rule:nonzero;stroke:none"
