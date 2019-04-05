@@ -1,4 +1,4 @@
-svgexport brainstem.svg brainstem.png 390:80:345:385 7x
+svgexport brainstem.svg brainstem.png 390:80:345:385 8x
 
 Use Gimp to add transperancy.
 
