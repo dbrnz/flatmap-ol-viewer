@@ -1,5 +1,0 @@
-svgexport brainstem.svg brainstem.png 390:80:345:385 8x
-
-Use Gimp to add transperancy.
-
-./tilemaker --map body 10000 18000 --layer brainstem brainstem.png --offset 3600 13500 --zoom 5 7
