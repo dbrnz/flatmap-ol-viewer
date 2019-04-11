@@ -1,5 +1,9 @@
 {
   "name": "flatmaps",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dbrnz/flatmaps.git"
+  },
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
