@@ -10,7 +10,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "parcel index.html",
-    "build": "parcel build --public-url . index.html"
+    "build": "parcel build --public-url . index.html",
+    "docs": "./node_modules/.bin/esdoc -c .esdoc.json"
   },
   "author": "David Brooks",
   "license": "Apache-2.0",
