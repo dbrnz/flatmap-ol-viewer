@@ -2,7 +2,7 @@
     "id": "functional",
     "size": [20000, 12000],
     "layers": [{
-        "source": "functional"
+        "id": "functional"
       }
     ]
 }
