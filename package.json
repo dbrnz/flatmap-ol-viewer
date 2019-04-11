@@ -11,10 +11,12 @@
   "author": "David Brooks",
   "license": "Apache-2.0",
   "dependencies": {
-    "ol": "^6.0.0-beta.1",
-    "ol-contextmenu": "^3.3.0",
     "broadcast-channel": "^2.1.10",
-    "ol-ext": "^3.1.0",
+    "ol": "^6.0.0-beta.5",
+    "ol-contextmenu": "^3.3.1",
+    "pbf": "^3.1.0",
+    "pixelworks": "^1.1.0",
+    "rbush": "^2.0.2"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.8.0",
