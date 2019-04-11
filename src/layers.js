@@ -138,8 +138,8 @@ export class LayerManager
             source: new TileImage({
                 attributions: ATTRIBUTION_ABI,
                 tileGrid: this._map.tileGrid,
-                tileUrlFunction: layerOptions.source ? ((...args) => {
-                    return LayerManager.tileUrl_(this._map.id, layerOptions.source, ...args);
+                tileUrlFunction: layerOptions.id ? ((...args) => {
+                    return LayerManager.tileUrl_(this._map.id, layerOptions.id, ...args);
                 }) : null
             })
         });
@@ -152,8 +152,9 @@ export class LayerManager
                                   //  are always rotated with the view and pixels are
                                   //  scaled during zoom animations.
             source: new FeatureSource(
-                this.featureUrl_(layerOptions.source),
-                new GeoJSON({dataProjection: this._map.projection})            )
+                this.featureUrl_(layerOptions.id),
+                new GeoJSON({dataProjection: this._map.projection})
+            )
         });
         this._featureLayerCollection.push(featureLayer);
 

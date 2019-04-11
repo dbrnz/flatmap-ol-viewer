@@ -93,8 +93,8 @@ export class FlatMap extends olMap
      * @param      {Boolean}  [options.layerSwitcher=false]  Add a control to control layer visibility
      * @param      {Boolean}  [options.overviewMap=false]  Add a control to show an overview map
      * @param      {Array<Object>}  options.layers  Details of the map's layers
-     * @param      {String}  [options.layers.source]  The layer's features are in ``/{id}/features/{source}``
-     *                                                and the layer's image tiles in ``/{id}/tiles/{source}/``
+     * @param      {String}  [options.layers.id]  The layer's features are in ``/{id}/features/{layer.id}``
+     *                                            and the layer's image tiles in ``/{id}/tiles/{layer.id}/``
      * @param      {String}  [options.layers.title]  The layer's title. A layer will only appear in the
      *                                               layer switcher if it has title
      * @param      {Array<number>}  [options.layers.zoom] Optional [min, max] zoom levels for displaying
