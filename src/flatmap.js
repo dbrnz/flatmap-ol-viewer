@@ -71,7 +71,7 @@ import {TileDebug} from 'ol/source.js';
 
 import {Editor} from './editor.js';
 import {LayerManager} from './layers.js';
-import {MessageManager} from './messages.js';
+import {MessagePasser} from './messages.js';
 import {PopupMenu} from './menus.js';
 import {Viewer} from './viewer.js';
 
@@ -228,7 +228,7 @@ export class FlatMap extends olMap
         this._viewer = new Viewer(this);
         this._viewer.enable();
 
-        this._messageHandler = MessageManager.connect(this._id, json => this._viewer.process(json));
+        this._messagePasser = new MessagePasser(this._id, json => this._viewer.process(json));
     }
 
     get id()

@@ -22,60 +22,26 @@ limitations under the License.
 
 //==============================================================================
 
-class MessageManager_
-{
-    constructor()
-    {
-        this._clients = new Map();
-        console.log('New message manager...');
-    }
-
-    connect(clientId, callback)
-    {
-        if (!this._clients.has(clientId)) {
-            this._clients.set(clientId, new MessageClient_(clientId, callback, this))
-        }
-        return this._clients.get(clientId);
-    }
-
-    disconnect(clientId)
-    {
-        this._clients.delete(clientId);
-    }
-
-    broadcast(senderId, json)
-    {
-        for (const [id, client] of this._clients) {
-            if (id !== senderId) {
-                client.callback(json);
-            }
-        }
-    }
-
-}
+import BroadcastChannel from 'broadcast-channel';
 
 //==============================================================================
 
-export const MessageManager = new MessageManager_();
+const SPARC_CHANNEL = 'sparc-portal';
 
 //==============================================================================
 
-class MessageClient_
+export class MessagePasser
 {
-    constructor(id, callback, manager)
+    constructor(id, callback)
     {
         this._id = id;
-        this._callback = callback;
-        this._manager = manager;
+        this._channel = new BroadcastChannel(SPARC_CHANNEL);
+        this._channel.addEventListener('message', callback);
     }
 
-    callback(...args) {
-        this._callback(...args);
-    }
-
-    send(resource, action, data='')
+    broadcast(resource, action, data='')
     {
-        this._manager.broadcast(this._id, {
+        this._channel.postMessage({
             "sender": this._id,
             "resource": resource.getId(),
             "type": resource.get('type') || '',

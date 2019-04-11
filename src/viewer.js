@@ -150,7 +150,7 @@ export class Viewer
             this._selectedFeature = feature;
             const id = feature.getId();
             if (id) {
-                this._map.messageHandler.send(feature, 'select')
+                this._map.messagePasser.broadcast(feature, 'select')
             }
             // highlight feature (==> unhighlight others)
         } else {

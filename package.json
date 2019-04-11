@@ -13,6 +13,7 @@
   "dependencies": {
     "ol": "^6.0.0-beta.1",
     "ol-contextmenu": "^3.3.0",
+    "broadcast-channel": "^2.1.10",
     "ol-ext": "^3.1.0",
   },
   "devDependencies": {
