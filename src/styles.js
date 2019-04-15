@@ -104,7 +104,6 @@ export function defaultStyle(map, feature, resolution)
                 color: [255, 255, 255, 0]
             }),
             geometry: featureGeometry_(feature),
-            text: featureText_(feature, fontSize)
             image: featurePointStyle_(/* feature.get('name') ? strokeWidth/4 : */ 1.2*strokeWidth, [0, 0, 128, 0.1]),
             stroke: new Stroke({color: [0, 0, 0, 0.01], width: strokeWidth})
         })
@@ -188,7 +187,7 @@ export function viewStyle(map, feature, resolution)
     return [
         new Style({
             fill: new Fill({
-                color: [255, 255, 255, 0.2]
+                color: [255, 224, 224, 0.4]
             }),
             geometry: featureGeometry_(feature),
             image: featurePointStyle_(1.2*strokeWidth, '#008'),
