@@ -90,6 +90,7 @@ export class FlatMap extends olMap
      * @param      {String}  options.id  An identifier for the map
      * @param      {Array<number>}  options.size   A two-long array giving the map's ``width`` and ``height``
      * @param      {Boolean}  [options.debug=false]  Add a layer showing the grid tiles
+     * @param      {Boolean}  [options.annotate=false]  Allow features to be annotated
      * @param      {Boolean}  [options.edit=false]  Allow features to be edited
      * @param      {Boolean}  [options.layerSwitcher=false]  Add a control to control layer visibility
      * @param      {Boolean}  [options.overviewMap=false]  Add a control to show an overview map
@@ -256,6 +257,12 @@ export class FlatMap extends olMap
     //==================
     {
         return this._messageHandler;
+    }
+
+    get options()
+    //===========
+    {
+        return this._options;
     }
 
     get projection()
