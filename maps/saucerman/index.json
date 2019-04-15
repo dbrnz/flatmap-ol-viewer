@@ -5,33 +5,33 @@
     "layerSwitcher": true,
     "layers": [
         {
-            "source": "background"
+            "id": "background"
         }, {
-            "source": "potassium",
+            "id": "potassium",
             "title": "Potassium"
         }, {
-            "source": "calcium",
+            "id": "calcium",
             "title": "Calcium"
         }, {
-            "source": "sodium",
+            "id": "sodium",
             "title": "Sodium"
         }, {
-            "source": "hydrogen",
+            "id": "hydrogen",
             "title": "Hydrogen"
         }, {
-            "source": "mitochrondial-complex",
+            "id": "mitochrondial-complex",
             "title": "Mitochrondial"
         }, {
-            "source": "chloride",
+            "id": "chloride",
             "title": "Chloride"
         }, {
-            "source": "bicarbonate",
+            "id": "bicarbonate",
             "title": "Bicarbonate"
         }, {
-            "source": "hydroxide",
+            "id": "hydroxide",
             "title": "Hydroxide"
         }, {
-            "source": "metabolic",
+            "id": "metabolic",
             "title": "Metabolic"
         }
     ]
