@@ -224,12 +224,20 @@ export class FlatMap extends olMap
               })
             );
         }
+        // Add default context menu
+        this._contextMenu = new PopupMenu(this);
 
         // By default enable pointerMove select interaction to highlight features
         this._viewer = new Viewer(this);
         this._viewer.enable();
 
         this._messagePasser = new MessagePasser(this._id, json => this._viewer.process(json));
+    }
+
+    get contextMenu()
+    //===============
+    {
+        return this._contextMenu;
     }
 
     get id()
