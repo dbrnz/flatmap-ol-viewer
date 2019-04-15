@@ -154,6 +154,15 @@ export class FlatMap extends olMap
 
         this.addControl(new FullScreen());
 
+        // Debug ==> editable
+        if (options.debug) {
+            options.editable = true;
+        }
+        // Editable ==> annotate
+        if (options.editable) {
+            options.annotate = true;
+        }
+
         this._options = options;
         this._id = options.id;
         this._projection = mapProjection;
