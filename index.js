@@ -22,10 +22,6 @@ limitations under the License.
 
 //==============================================================================
 
-
-
-//==============================================================================
-
 import {FlatMap} from './src/flatmap.js';
 import * as utils from './src/utils.js';
 
@@ -60,20 +56,6 @@ function loadMap(mapId, htmlElementId)
 
 //==============================================================================
 
-function init()
-{
-//    const map = new FlatMap('map1', blankMap);
-
-    loadMap('body', 'map1');
-
-    loadMap('functional', 'map2');
-
-    loadMap('saucerman', 'map3');
-}
+window.loadMap = loadMap;
 
 //==============================================================================
-
-init();
-
-//==============================================================================
-
