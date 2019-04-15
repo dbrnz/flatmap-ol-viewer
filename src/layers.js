@@ -134,7 +134,6 @@ export class LayerManager
     //==============================
     {
         const tileLayer = new TileLayer({
-            title: layerOptions.title,
             source: new TileImage({
                 attributions: ATTRIBUTION_ABI,
                 tileGrid: this._map.tileGrid,
@@ -146,7 +145,6 @@ export class LayerManager
         this._imageTileLayerCollection.push(tileLayer);
 
         const featureLayer = new VectorLayer({
-            title: layerOptions.title,
             style: (...args) => styles.defaultStyle(this._map, ...args),
             //renderMode: 'image',  //  Great performance, but point symbols and texts
                                   //  are always rotated with the view and pixels are
