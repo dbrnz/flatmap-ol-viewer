@@ -18,7 +18,7 @@
   "dependencies": {
     "broadcast-channel": "^2.1.10",
     "ol": "^6.0.0-beta.5",
-    "ol-contextmenu": "^3.3.1",
+    "ol-contextmenu": "github:dbrnz/ol-contextmenu#ol6-npm",
     "pbf": "^3.1.0",
     "pixelworks": "^1.1.0",
     "rbush": "^2.0.2"
