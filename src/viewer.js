@@ -116,9 +116,9 @@ export class Viewer
         const feature = this._map.forEachFeatureAtPixel(pixel, feature => feature);
 
         if (feature) {
-            const id = feature.getId();
-            if (id) {
-                this._tooltip.innerHTML = id;
+            const tooltip = feature.get('description');
+            if (tooltip) {
+                this._tooltip.innerHTML = tooltip;
                 this._tooltipOverlay.setPosition(e.coordinate);
                 this._tooltip.style.display = '';
             } else {
