@@ -91,7 +91,7 @@ export class FlatMap extends olMap
      * @param      {Array<number>}  options.size   A two-long array giving the map's ``width`` and ``height``
      * @param      {Boolean}  [options.debug=false]  Add a layer showing the grid tiles
      * @param      {Boolean}  [options.annotate=false]  Allow features to be annotated
-     * @param      {Boolean}  [options.edit=false]  Allow features to be edited
+     * @param      {Boolean}  [options.editable=false]  Allow features to be edited
      * @param      {Boolean}  [options.layerSwitcher=false]  Add a control to control layer visibility
      * @param      {Boolean}  [options.overviewMap=false]  Add a control to show an overview map
      * @param      {Array<Object>}  options.layers  Details of the map's layers
@@ -161,7 +161,7 @@ export class FlatMap extends olMap
         this._tileGrid = mapGrid;
         this._featureLayers = [];
 
-        if (options.edit) {
+        if (options.editable) {
             this._editor = new Editor(this);
         }
 
