@@ -51,6 +51,7 @@ import 'ol-contextmenu/dist/ol-contextmenu.css';
 
 // Import after those required by packages so we can override styles
 
+import '/static/css/ol-contextmenu.css';
 import '/static/css/ol-layerswitcher.css';
 import '/static/css/flatmap.css';
 
