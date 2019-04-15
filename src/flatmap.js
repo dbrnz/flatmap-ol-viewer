@@ -253,10 +253,10 @@ export class FlatMap extends olMap
         return this._layerManager;
     }
 
-    get messageHandler()
+    get messagePasser()
     //==================
     {
-        return this._messageHandler;
+        return this._messagePasser;
     }
 
     get options()
