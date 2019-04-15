@@ -53,6 +53,7 @@ function loadMap(mapId, htmlElementId)
         throw new Error(`Couldn't fetch '${mapId}' map`);
     })
     .then(json => {
+        console.assert(mapId === json.id, `Map '${mapId}' has wrong id (${json.id})`)
         return new FlatMap(htmlElementId, json);
     });
 }
