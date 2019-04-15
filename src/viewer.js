@@ -116,6 +116,7 @@ export class Viewer
         const feature = this._map.forEachFeatureAtPixel(pixel, feature => feature);
 
         if (feature) {
+            this._map.contextMenu.update(pixel, feature);
             const tooltip = feature.get('description');
             if (tooltip) {
                 this._tooltip.innerHTML = tooltip;
@@ -125,6 +126,7 @@ export class Viewer
                 this._tooltip.style.display = 'none';
             }
         } else {
+            this._map.contextMenu.close();
             this._tooltip.style.display = 'none';
         }
 
