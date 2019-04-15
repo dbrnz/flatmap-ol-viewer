@@ -150,7 +150,7 @@ export class FlatMap extends olMap
             view: mapView,
             loadTilesWhileInteracting: true,
             loadTilesWhileAnimating: true
-          });
+        });
 
         this.addControl(new FullScreen());
 
