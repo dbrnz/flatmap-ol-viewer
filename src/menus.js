@@ -26,44 +26,98 @@ import ContextMenu from 'ol-contextmenu';
 
 //==============================================================================
 
-// A Map has a contextMenu (map.contextMenu)
-
-// Menu:
-//	 add item
-//	 remove item
-//	 add/remove (sub-)menu
-
-// Item:
-//	 prompt, help text, action, icon, enabled
-//	 enable/disable
 
 //==============================================================================
 
 export class PopupMenu
 {
-	constructor(map)
-	{
-		this._contextmenu = new ContextMenu({
-		    width: 170,
-		    defaultItems: true, // defaultItems are (for now) Zoom In/Zoom Out
-		    items: [
-			    {
-			        text: 'Center map here',
-			        classname: 'some-style-class' // add some CSS rules
-			        //callback: center // `center` is your callback function
-			    },
-			    {
-			        text: 'Add a Marker',
-			        classname: 'some-style-class', // you can add this icon with a CSS class
-			                                       // instead of `icon` property (see next line)
-			        icon: 'img/marker.png'  // this can be relative or absolute
-			        //callback: marker
-			    },
-			    '-' // this is a separator
-		  	]
-		});
-		map.addControl(this._contextmenu);
-	}
+    constructor(map)
+    {
+        this._map = map;
+        this._currentFeature = null;
+        this._contextmenu = new ContextMenu({
+            width: 170,
+            defaultItems: false,
+            items: []
+        });
+
+        // Only for features
+        this._contextmenu.on('beforeopen', evt => {
+            const feature = map.forEachFeatureAtPixel(evt.pixel, (ft, l) => ft);
+            if (!this.setupMenu_(feature)) {
+                if (feature) {
+                    // Disable the browser's default menu if the feature
+                    // doesn't have a menu...
+                    //evt.preventDefault();  // We need to access the actual mouse event
+                }
+            }
+        });
+
+        map.addControl(this._contextmenu);
+    }
+
+    setupMenu_(feature)
+    //=================
+    {
+        if (feature) {
+            let menuItems = [];
+            if (feature.getId() && feature.get('type')) {
+                menuItems.push({
+                    text: `Query ${feature.get('type')}`,
+                    callback: this.query_.bind(this)
+                });
+            }
+            if (this._map.options.annotate) {
+                if (menuItems.length > 0) {
+                    menuItems.push('-');
+                }
+                menuItems.push({
+                    text: 'Annotate',
+                    callback: this.annotate_.bind(this)
+                });
+            }
+            if (menuItems.length > 0) {
+                this._currentFeature = feature;
+                this._contextmenu.clear();
+                this._contextmenu.extend(menuItems);
+                this._contextmenu.enable();
+                return true;
+            }
+        }
+        this._currentFeature = null;
+        this._contextmenu.disable();
+        return false;
+    }
+
+    annotate_(evt)
+    //============
+    {
+        console.log('Annotate', this._currentFeature);
+    }
+
+    query_(evt)
+    //=========
+    {
+        this._map.messagePasser.broadcast(this._currentFeature, 'query');
+    }
+
+    close()
+    //=====
+    {
+        if (this._contextmenu.isOpen()) {
+            this._currentFeature = null;
+            this._contextmenu.close();
+        }
+    }
+
+    update(pixel, feature)
+    //====================
+    {
+        if (this._contextmenu.isOpen()) {
+            this.setupMenu_(feature);
+            this._contextmenu.updatePosition(pixel);
+        }
+    }
 }
 
 //==============================================================================
