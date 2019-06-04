@@ -165,19 +165,12 @@ export class FlatMap extends olMap
             options.annotate = true;
         }
 
-        if (options.annotate) {
-            this._annotator = new Annotator();
-        }
-
-        this._options = options;
-        this._id = options.id;
-        this._projection = mapProjection;
-        this._resolutions = mapResolutions;
-        this._tileGrid = mapGrid;
-        this._featureLayers = [];
-
         if (options.editable) {
             this._editor = new Editor(this);
+        }
+
+        if (options.annotate) {
+            this._annotator = new Annotator();
         }
 
         // Add a debugging grid if option set and make
@@ -193,6 +186,13 @@ export class FlatMap extends olMap
                 })
             }));
         }
+
+        this._options = options;
+        this._id = options.id;
+        this._projection = mapProjection;
+        this._resolutions = mapResolutions;
+        this._tileGrid = mapGrid;
+        this._featureLayers = [];
 
         // Add map's layers
 
