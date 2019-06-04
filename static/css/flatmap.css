@@ -123,8 +123,19 @@ form.annotator select {
     float: right;
     background-color: #DDD;
 }
+
+/* JS Panel */
+
 .jsPanel-title {
     font-size: 1.2rem;
+}
+@keyframes modalBackdropFadeIn {
+    from { opacity: 0; }
+    to { opacity: 0.3; }
+}
+@keyframes modalBackdropFadeOut {
+    from {  opacity: 0.3; }
+    to { opacity: 0; }
 }
 .jsPanel-modal-backdrop {
     animation-duration: 200ms;
