@@ -98,8 +98,6 @@ export class PopupMenu
     annotate_(evt)
     //============
     {
-        console.log('Annotate', this._currentFeature);
-
         this._map.annotator.annotate(this._currentFeature);
     }
 
