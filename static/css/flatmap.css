@@ -12,7 +12,7 @@
 /* Tidy up layer switcher control */
 
 .layer-switcher {
-	top: 2.5em;
+    top: 2.5em;
     right: 0em;
 }
 
@@ -36,49 +36,49 @@
 }
 
 .flatmap-window {
-	display: flex;
-	flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .flatmap-map {
-	flex-grow: 1;
+    flex-grow: 1;
 }
 
 /* Tool bar styling */
 
 .flatmap-toolbar {
-	position: absolute;
-	top: 10px;
-	left: 50px;
+    position: absolute;
+    top: 10px;
+    left: 50px;
     font-size: 20px;
-	height: 1.55em;
-	border: 2px solid SlateGray;
-	background: WhiteSmoke;
-	opacity: 0.7;
-	color: SteelBlue;
+    height: 1.55em;
+    border: 2px solid SlateGray;
+    background: WhiteSmoke;
+    opacity: 0.7;
+    color: SteelBlue;
 }
 
 .flatmap-toolbar i {
-	border: 1.5px solid Silver;
-	width: 1.25em;
-	height: 1.15em;
-	text-align: center;
-	padding: 3px;
-	padding-top: 5px;
-	padding-bottom: 1px;
+    border: 1.5px solid Silver;
+    width: 1.25em;
+    height: 1.15em;
+    text-align: center;
+    padding: 3px;
+    padding-top: 5px;
+    padding-bottom: 1px;
 }
 
 .flatmap-toolbar i.selected {
-	background: SkyBlue;
-	border: 1.5px solid SteelBlue;
+    background: SkyBlue;
+    border: 1.5px solid SteelBlue;
 }
 
 .flatmap-toolbar i.spacer {
-	width: 0;
-	padding: 0;
-	border: 1.5px solid SlateGray;
-	border-top: 5px solid SlateGray;
-	border-bottom: 4px solid SlateGray;
+    width: 0;
+    padding: 0;
+    border: 1.5px solid SlateGray;
+    border-top: 5px solid SlateGray;
+    border-bottom: 4px solid SlateGray;
 }
 
 /* Tooltip */
@@ -99,37 +99,37 @@
 /* Annotator */
 
 form.annotator {
-	padding: 4px;
+    padding: 4px;
 }
 form.annotator div {
-	padding-top: 4px;
-	padding-bottom: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
-	float: right;
 form.annotator input,
 form.annotator select {
+    float: right;
 }
 .annotator label {
-	display: inline-block;
+    display: inline-block;
 }
 .annotator input {
-	margin-left: 6px;
+    margin-left: 6px;
 }
-	width: 160px;
 .annotator input[type="text"],
 .annotator select {
+    width: 160px;
 }
 .annotator input[type="submit"] {
-	float: right;
-	background-color: #DDD;
+    float: right;
+    background-color: #DDD;
 }
 .jsPanel-title {
- 	font-size: 1.2rem;
+    font-size: 1.2rem;
 }
 .jsPanel-modal-backdrop {
-  animation-duration: 200ms;
-    background: #808080;
+    animation-duration: 200ms;
+    background: #fff;
 }
 .jsPanel-modal-backdrop-out {
-  animation-duration: 200ms;
+    animation-duration: 200ms;
 }
