@@ -105,8 +105,9 @@ form.annotator div {
 	padding-top: 4px;
 	padding-bottom: 4px;
 }
-form.annotator input {
 	float: right;
+form.annotator input,
+form.annotator select {
 }
 .annotator label {
 	display: inline-block;
@@ -114,8 +115,9 @@ form.annotator input {
 .annotator input {
 	margin-left: 6px;
 }
-.annotator input[type="text"] {
 	width: 160px;
+.annotator input[type="text"],
+.annotator select {
 }
 .annotator input[type="submit"] {
 	float: right;
