@@ -118,7 +118,7 @@ export class Viewer
 
             if (feature) {
                 if (!this._map.contextMenu.active) {
-                    const tooltip = feature.get('description');
+                    const tooltip = feature.get('name');
                     if (tooltip) {
                         this._tooltip.innerHTML = tooltip;
                         this._tooltipOverlay.setPosition(e.coordinate);
