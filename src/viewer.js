@@ -53,10 +53,11 @@ export class Viewer
 
         // Display a tooltip at the mouse pointer
 
-        // Each map needs its own tooltip element
+        // Each map needs its own tooltip element as otherwise it
+        // can get associated with the wrong map...
 
         this._tooltip = document.createElement('div');
-        this._tooltip.id = 'tooltip';
+        this._tooltip.id = `tooltip-${map.getId()}`;
         this._tooltip.classList.add('tooltip');
         this._tooltipOverlay = new Overlay({
             element: this._tooltip,
