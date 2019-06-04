@@ -46,6 +46,7 @@ limitations under the License.
 import 'ol/ol.css';
 
 import 'ol-contextmenu/dist/ol-contextmenu.css';
+import 'jspanel4/es6module/jspanel.css';
 
 //==============================================================================
 
@@ -70,6 +71,7 @@ import {TileDebug} from 'ol/source.js';
 
 //==============================================================================
 
+import {Annotator} from './annotation.js';
 import {Editor} from './editor.js';
 import {LayerManager} from './layers.js';
 import {MessagePasser} from './messages.js';
@@ -163,6 +165,10 @@ export class FlatMap extends olMap
             options.annotate = true;
         }
 
+        if (options.annotate) {
+            this._annotator = new Annotator();
+        }
+
         this._options = options;
         this._id = options.id;
         this._projection = mapProjection;
@@ -254,6 +260,12 @@ export class FlatMap extends olMap
     //======
     {
         return this._id;
+    }
+
+    get annotator()
+    //=============
+    {
+        return this._annotator;
     }
 
     get layerManager()

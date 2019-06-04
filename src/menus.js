@@ -56,6 +56,12 @@ export class PopupMenu
         map.addControl(this._contextmenu);
     }
 
+    get active()
+    //==========
+    {
+        return this._contextmenu.isOpen();
+    }
+
     setupMenu_(feature)
     //=================
     {
@@ -93,6 +99,8 @@ export class PopupMenu
     //============
     {
         console.log('Annotate', this._currentFeature);
+
+        this._map.annotator.annotate(this._currentFeature);
     }
 
     query_(evt)

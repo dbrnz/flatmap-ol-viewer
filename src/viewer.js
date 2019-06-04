@@ -112,30 +112,33 @@ export class Viewer
     pointerMove_(e)
     //=============
     {
-        const pixel = e.pixel;
-        const feature = this._map.forEachFeatureAtPixel(pixel, feature => feature);
+        if (this._enabled) {
+            const pixel = e.pixel;
+            const feature = this._map.forEachFeatureAtPixel(pixel, feature => feature);
 
-        if (feature) {
-            this._map.contextMenu.update(pixel, feature);
-            const tooltip = feature.get('description');
-            if (tooltip) {
-                this._tooltip.innerHTML = tooltip;
-                this._tooltipOverlay.setPosition(e.coordinate);
-                this._tooltip.style.display = '';
+            if (feature) {
+                if (!this._map.contextMenu.active) {
+                    const tooltip = feature.get('description');
+                    if (tooltip) {
+                        this._tooltip.innerHTML = tooltip;
+                        this._tooltipOverlay.setPosition(e.coordinate);
+                        this._tooltip.style.display = '';
+                    } else {
+                        this._tooltip.style.display = 'none';
+                    }
+                }
             } else {
+                this._map.contextMenu.close();
                 this._tooltip.style.display = 'none';
             }
-        } else {
-            this._map.contextMenu.close();
-            this._tooltip.style.display = 'none';
-        }
 
-        if (this._enabled) {
-            this.clearStyle_(); // But not selected feature...
-            this._map.forEachFeatureAtPixel(e.pixel, feature => {
-                feature.setStyle((...args) => styles.viewStyle(this._map, ...args));
-                this._highlightedFeatures.push(feature);
-            });
+            if (!this._map.contextMenu.active) {
+                this.clearStyle_(); // But not selected feature...
+                this._map.forEachFeatureAtPixel(e.pixel, feature => {
+                    feature.setStyle((...args) => styles.viewStyle(this._map, ...args));
+                    this._highlightedFeatures.push(feature);
+                });
+            }
         }
     }
 
